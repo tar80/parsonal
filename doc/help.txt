@@ -1,0 +1,19 @@
+parsonal
+
+Author: tar80
+License: MIT
+Repository: 
+===============================================================================
+構成ファイルの説明
+
+config/	関連した設定ごとにまとめたPPxCfgファイル
+	_default.json	色設定
+
+dist/
+	launchNeovim.js	Neovimの起動オプションを設定し実行する
+
+switchmenu/
+	keyset.cfg	キー設定変更メニュー
+
+===============================================================================
+vim:tw=79:ts=8:sts=0:sw=4:norl:noet:fen:

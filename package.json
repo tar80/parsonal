@@ -1,0 +1,33 @@
+{
+  "name": "@ppmdev/parsonal",
+  "version": "0.0.0",
+  "description": "Customization files for PPx",
+  "author": "tar80 <tar80master@gmail.com> (https://tar80.github.io/pages-pca/)",
+  "license": "MIT",
+  "type": "module",
+  "main": "",
+  "directories": {
+    "doc": "doc",
+    "lib": "dist/lib"
+  },
+  "scripts": {
+    "ts": "tsc --noEmit true --skipLibCheck true",
+    "deno": "deno run --no-check --allow-all --unstable",
+    "build": "ppmbuild",
+    "build:prod": "set NODE_ENV=Production&&ppmbuild -- src",
+    "test": "jest"
+  },
+  "jest": {
+    "verbose": true,
+    "coverageProvider": "v8",
+    "preset": "ts-jest",
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/__tests__/**/*.ts",
+      "**/?(*.)+test.ts"
+    ]
+  }
+}

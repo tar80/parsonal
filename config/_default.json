@@ -1,0 +1,23 @@
+{
+  "name": "Defalut",
+  "black": "#474959",
+  "red": "#E27878",
+  "green": "#B4BE82",
+  "yellow": "#D6B27C",
+  "blue": "#648CC1",
+  "purple": "#988DBC",
+  "cyan": "#89B8C2",
+  "white": "#D8DAF3",
+  "brightBlack": "#676A7C",
+  "brightRed": "#F89494",
+  "brightGreen": "#A8D487",
+  "brightYellow": "#E0CC7D",
+  "brightBlue": "#67A6F6",
+  "brightPurple": "#B992EF",
+  "brightCyan": "#83CBDA",
+  "brightWhite": "#F7F7F8",
+  "background": "#131320",
+  "foreground": "#C6C8D1",
+  "cursorColor": "#2F97FF",
+  "selectionBackground": "#15312E"
+}
