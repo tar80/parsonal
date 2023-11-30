@@ -55,7 +55,7 @@ const extractPath = (option: string | undefined): [boolean, string | string[]] =
   const fso = PPx.CreateObject('Scripting.FileSystemObject');
 
   for (let i = 0, path; i < len; i++) {
-    path = PPx.Extract(`%*linkedpath(${paths[i]})`) || paths[i];
+    path = PPx.Extract(`%*linkedpath(${paths[i]})`) || paths[i].replace(/"/g, '');
 
     if (!fso.FileExists(path)) {
       for (i++; i < len; i++) {
