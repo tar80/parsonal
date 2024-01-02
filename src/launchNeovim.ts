@@ -3,6 +3,7 @@
  * @arg {number} 1 - Vimserver port number
  * @arg {string} 2 - Edit-order. edit | args | diff | command
  * @arg {string} 3 - Optional commandLine
+ * @return - Has Error. "-1"(true) | "0"(false)
  */
 
 'use strict';
@@ -12,19 +13,30 @@ type ExOrder = 'edit' | 'args' | 'diff' | 'command';
 type Nvim = {process: Bool; port: string; order: ExOrder; option: string | undefined};
 type OkString = [boolean, string];
 
-const main = (): void => {
+const ATT_ALIAS = 1024;
+const fso = PPx.CreateObject('Scripting.FileSystemObject');
+
+const main = (): Bool => {
   const nvim = adjustArgs();
+
+  if (!nvim) {
+    return '-1';
+  }
+
   const [ok, data] = editCmd[nvim.order](nvim);
 
   if (!ok) {
-    return PPx.linemessage(`!"${data}`);
+    PPx.linemessage(`!"${data}`);
+    return '-1';
   }
 
   const cmdline = exCmd(nvim.process, data);
   PPx.Execute(`%Obd nvim --server "\\\\.\\pipe\\nvim.${nvim.port}.0" ${cmdline}`);
+
+  return '0';
 };
 
-const adjustArgs = (args = PPx.Arguments): Nvim => {
+const adjustArgs = (args = PPx.Arguments): Nvim | void => {
   const arr: [string, string, string, string | undefined] = ['0', '100', 'edit', undefined];
   const isBool = (v: string): v is Bool => /0|-1/.test(v);
   const isExOrder = (v: string): v is ExOrder => /^(edit|args|diff|command)$/.test(v);
@@ -34,42 +46,57 @@ const adjustArgs = (args = PPx.Arguments): Nvim => {
   }
 
   if (!isBool(arr[0])) {
-    throw new Error(`Wrong value passed. arg0:${arr[0]}`);
+    PPx.Echo(`Wrong value passed. arg0:${arr[0]}`);
+    return;
   }
 
   if (!isExOrder(arr[2])) {
-    throw new Error(`Wrong value passed. arg2:${arr[2]}`);
+    PPx.Echo(`Wrong value passed. arg2:${arr[2]}`);
+    return;
   }
 
   return {process: arr[0], port: arr[1], order: arr[2], option: arr[3]};
 };
 
+const getActualPath = (path: string): string => {
+  const file = fso.GetFile(path);
+  const isAlias = file.Attributes & ATT_ALIAS;
+  path = isAlias ? PPx.Extract(`%*linkedpath(${path})`) : path;
+
+  return path.replace(/([^\\])\s/g, '$1\\ ');
+};
+
 const extractPath = (option: string | undefined): [boolean, string | string[]] => {
-  const pathString = option || PPx.Extract('%#;FDCN');
+  const pathString = option ? option.replace(/\\\s/g, ' ') : PPx.Extract('%#;FDCN');
   const markCount = !option ? PPx.EntryMarkCount : 2;
   const splitter = ~pathString.indexOf(';') ? ';' : ' ';
   const paths = markCount < 2 ? [pathString] : pathString.split(splitter);
   const len = paths.length;
   const actualPath: string[] = [];
 
-  const fso = PPx.CreateObject('Scripting.FileSystemObject');
-
   for (let i = 0, path; i < len; i++) {
-    path = PPx.Extract(`%*linkedpath(${paths[i]})`) || paths[i].replace(/"/g, '');
+    path = paths[i].replace(/"/g, '');
 
-    if (!fso.FileExists(path)) {
+    if (fso.FileExists(path)) {
+      actualPath.push(getActualPath(path));
+    } else {
+      let isExist = false;
+
       for (i++; i < len; i++) {
-        path = PPx.Extract(`%*linkedpath(${path} ${paths[i]})`) || `${path} ${paths[i]}`;
+        path = `${path} ${paths[i].replace(/"/g, '')}`;
 
         if (fso.FileExists(path)) {
+          actualPath.push(getActualPath(path));
+          isExist = true;
+
           break;
         }
       }
 
-      return [false, `Failed to extract path`];
+      if (!isExist) {
+        return [false, `Failed to extract path`];
+      }
     }
-
-    actualPath.push(path);
   }
 
   return [true, actualPath];
@@ -108,4 +135,4 @@ const exCmd = (process: Bool, cmdline: string): string =>
     '-1': `--remote-send "<Cmd>stopinsert|tabnew|${cmdline}<CR>"`
   })[process];
 
-main();
+PPx.result = main();

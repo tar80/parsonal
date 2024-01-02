@@ -1,0 +1,13 @@
+;<migemo>; o:edw,r:
+;<directory>; &a:d,
+;<date>; &d<1
+;<executable>; .bat;.cmd;.com;.exe;.lnk;.sh
+;<picture>; .avif;.bmp;.gif;.heic;.jp2;.jpc;.jpeg;.jpf;.jpg;.png;.psb;.psd;.svg;.tga;.tif*;.webp
+;<video movie>; .3gp;.asf;.avi;.flv;.mkv;.mov;.mp2;.mp4;.mpeg;.mpg;.qt;.webm;.wmv
+;<music sound>; .aac;.aif*;.ape;.asf;.flac;.oga;.ogg;.oma;.omg;.m4a;.mp3;.snd;.wav;.wma
+;<document text>; .doc;.docx;.dot;.jbh;.md;.odt;.pdf;.ppt;.pptx;.rtf;.sxw;.tex;.txt;.wri;.xls;.xlsx;.xml
+;<config setting>; .ini;.cfg;
+;<source code script>; .asm;.c;.cpp;.cs;.h;.hpp;.js;.mjs;.mak;.pl;.py;.rc;.s;.vbs;.lua;.vim
+;<archive>; .7z;.arj;.bz2;.bzip2;.cab;.dmz;.gz;.iso;.lzh;.lzma;.rar;.tar;.xz;.vhd;.vhdx;.zip
+;<date after>; &d>=2023-1-1
+;<size>; &s:<=1M
