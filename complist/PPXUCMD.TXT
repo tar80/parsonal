@@ -50,6 +50,8 @@
 *deletehistory  ;type,["text"|index] ヒストリの削除
 *diroption ;ディレクトリ別の設定のメニュー変更
 *dock ;dockの操作
+	add,t,address ;アドレスバー追加
+	add,b,log ;ログ窓追加
 *edit  ;[filename] PPeで編集(終了待ちする)
 *editmode ;[option] e:- n:NUMBER m:MASK s:SEARCH h:CMD d:DIR c:FILE f:FULLPATH
 	-sjis
@@ -81,23 +83,35 @@
 *execinarc ;書庫内ファイルを使用できるようにする
 *execute  ;ID,command 指定PPx上で実行
 *file ;[!]action[,[source][,[destination][,options]]] ファイル操作
-	/src: ;path コピー元の名前
-	/dest: ;path コピー先
-	/name: ;name コピー先の名前
-	/mask: ;エントリマスク 例)/mask:a:d+ ファイルコピーしない
-	/same: ;0:最新のみ 2:上書き 同名ファイル処理
-	/sameall:on ;同名ファイルが見つかったときに対処方法を選択入力しない
-	/extractname:on ; /nameのマクロ文字展開有り
-	/snum:001 ;連番番号
-	/div:100m ;分割サイズ
-	/sheet:1 ;名前シートを開く
-	/min ;最小化ダイアログ
-	/qstart ;順番待ち無し
-	/nocount ;総ファイル数・サイズ算出無し
-	/retry:3 ;３回再試行
-	/error:ignore ;エラーを全て無視
-	/querycreatedirectory:on ;ディレクトリ自動作成
-	/undolog:on ;UNDO可能に
+	-src: ;path コピー元の名前
+	-dest: ;path コピー先
+	-name: ;name コピー先の名前
+	-mask: ;エントリマスク 例)/mask:a:d+ ファイルコピーしない
+	-same: ;0:最新のみ 2:上書き 同名ファイル処理
+	-sameall:on ;同名ファイルが見つかったときに対処方法を選択入力しない
+	-extractname:on ; /nameのマクロ文字展開有り
+	-snum:001 ;連番番号
+	-div:100m ;分割サイズ
+	-upper:on ;大文字化
+	-lower:on ;小文字化
+	-sheet:1 ;名前シートを開く
+	-min ;最小化ダイアログ
+	-qstart ;順番待ち無し
+	-nocount ;総ファイル数・サイズ算出無し
+	-retry:3 ;３回再試行
+	-error:ignore ;エラーを全て無視
+	-skiperror:on ;軽微エラーを無視
+	-symcopy: ;[sym|file|query] シンボリックリンクのコピー方法
+	-symdel: ;[sym|file|query] シンボリックリンクの削除方法
+	-burst:on ;バーストモード有効
+	-flat:on ;ディレクトリの平坦化
+	-security:on ;セキュリティ属性を継承
+	-sacl:on ;監査属性を継承
+	-keepdir:on ;listfileの階層を再現
+	-deletenumber:on ;末尾の数字を削除
+	-querycreatedirectory:on ;ディレクトリ自動作成
+	-checkexistfirst:off ;サイズの算出をしない
+	-undolog:on ;UNDO可能に
  
 *fitwindow ;base window id[,target window id[,type]]
 	0 ;baseに重なる。大きさも同じに
@@ -176,7 +190,14 @@
 	-utf8
 	-utf8bom
  
-*markentry  ;[wildcards] エントリマーク
+*markentry ;[option] [wildcards] エントリマーク
+	-dialog ;       ダイアログを表示
+	-mark ;         マーク
+	-unmark ;       マーク解除
+	-reversemark ;  マーク反転
+	-highlight ;[:n]ハイライト
+	-list: ;<filepath>  ListFileを用いたマーク・ハイライト操作
+	-set: ; <filepath>  ListFileのマーク・ハイライト・拡張子色・コメント情報を反映
 *maskentry  ;[wildcards] 一時エントリマスク設定
 *maskpath  ;[on|off] PPc 書庫内のディレクトリ仮想移動
 *maximize  ;[window id] 窓最大化
@@ -184,6 +205,7 @@
 *minimize  ;[window id] 窓最小化
 *monitoroff ;モニターを省電力モードにする
 *mousepos  ;x,y マウスカーソルを移動
+*msgbox "%*errormsg(1)" ; Win32 エラーコードの内容
 *pack  ;[!]filename[,indiv][,dllname,type] 書庫作成
 *pairrate  ;[+|-]移動量|比率 ２枚の窓の幅／丈の比率を変更
 *pane ;commandname [parameter...] ペインの各種操作
@@ -200,7 +222,6 @@
 	select h-1 ;前の非表示タブ
 	swappane ;ペインを入れ替え
  
-*POSTMARK  ;[n] マークしたファイルをハイライト
 *poweroff ;Windows をシャットダウンし、電源を切る
 *ppb ;PPbを実行
 *ppc ;PPcを実行
@@ -224,7 +245,37 @@
 	-choose: ;edit|dd|con|multi エントリ選択フロントエンド
 	-choose: ;edit:エディットボックス dd:D&D con[8|16]:%#FDC multi[8|16]:%FDC
  
-*ppcfile  ;[!]action[,destdir[,option]] [C]/[M]コマンドを実行
+*ppcfile ;[!]action[,destdir[,option]] [C]/[M]コマンドを実行
+	-src: ;path コピー元の名前
+	-dest: ;path コピー先
+	-name: ;name コピー先の名前
+	-extractname:on ; /nameのマクロ文字展開有り
+	-same: ;0:最新のみ 2:上書き 同名ファイル処理
+	-sameall:on ;同名ファイルが見つかったときに対処方法を選択入力しない
+	-snum:001 ;連番番号
+	-div:100m ;分割サイズ
+	-upper:on ;大文字化
+	-lower:on ;小文字化
+	-mask: ;エントリマスク 例)/mask:a:d+ ファイルコピーしない
+	-min ;最小化ダイアログ
+	-qstart ;順番待ち無し
+	-nocount ;総ファイル数・サイズ算出無し
+	-retry:3 ;３回再試行
+	-error:ignore ;エラーを全て無視
+	-skiperror:on ;軽微エラーを無視
+	-sheet:1 ;名前シートを開く
+	-symcopy: ;[sym|file|query] シンボリックリンクのコピー方法
+	-symdel: ;[sym|file|query] シンボリックリンクの削除方法
+	-burst:on ;バーストモード有効
+	-flat:on ;ディレクトリの平坦化
+	-security:on ;セキュリティ属性を継承
+	-sacl:on ;監査属性を継承
+	-keepdir:on ;listfileの階層を再現
+	-deletenumber:on ;末尾の数字を削除
+	-querycreatedirectory:on ;ディレクトリ自動作成
+	-checkexistfirst:off ;サイズの算出をしない
+	-undolog:on ;UNDO可能に
+ 
 *ppcust ;[param]PPcustを実行
 	CA ;追加
 	CU ;更新
@@ -289,20 +340,27 @@
 	3 ;カラー高速
 	4 ;カラー綺麗
  
+*rename ;"old","new" 名前変更
+*RotateCustomize  ;custid,customize1,customize2[,...] "="" \=\\
+*RotateExecute  ;id,command1,command2[,...] "="" \=\\
+*replace  ;"text" 全テキスト入れ替え
+*replacefile  ;filename ファイルを開き直す(PPe)
+*return ;ユーザコマンドの終了
 *run ;[options] command [parameter] commandを実行
-	-launch ;commandのパスがあるディレクトリをカレントディレクトリとして実行をカレントディレクトリとして実行
-	-d:path ; pathをカレントディレクトリとし実行
-	-onppb ;常にPPb経由で実行
-	-noppb ;PPb経由で実行しない
-	-cmd ;常にコマンドラインシェル(cmd.exe等)を使用
-	-min ;最小化状態で実行
-	-max ;最大化状態で実行
+	-launch  ;実行ファイルのディレクトリ
+	-d:  ;[path] カレントディレクトリ指定
+	-onppb  ;PPbを介して実行
+	-noppb  ;PPbを使わず実行
+	-cmd  ;cmd.exeを介して実行
+	-min  ;最小化
+	-max  ;最大化
 	-hide ;非表示で実行
 	-noactive ;フォーカス移動なし
 	-wait ;終了待機
 	-wait:idle ;起動完了待機
-	-wait:later ;command *wait -run で待機できる。PID/TIDを記憶
+	-wait:later ;command *wait -run で待機。PID/TIDを記憶
 	-pid ;-tid  プロセスID, メインスレッドIDを保存
+	-log ;[:utf8] 標準出力をログ窓(PPcからの実行時のみ
 	-low ;実行優先度「低」
 	-belownormal ;実行優先度「通常以下」
 	-normal ;実行優先度「通常」
@@ -313,24 +371,18 @@
 	-newgroup ;プロセスグループを分離
 	-pos: ;x,y 表示位置を指定
 	-size: ;width,height 窓の大きさを指定
-	-log ;[:utf8] 標準出力をログ窓(PPcからの実行時のみ
  
-*RotateCustomize  ;custid,customize1,customize2[,...] "="" \=\\
-*RotateExecute  ;id,command1,command2[,...] "="" \=\\
-*rename  ;old,new 名前変更
-*replace  ;"text" 全テキスト入れ替え
-*replacefile  ;filename ファイルを開き直す(PPe)
-*return ;ユーザコマンドの終了
 *screensaver ;スクリーンセーバを起動
-*script %'scr'%\
-*script %'myrepo'%\ppx\xTest.js
+*script
+	%R
+	%~FDC
 *selectppx  ;[ID] 指定PPxにフォーカス移動
-*setcaption  ;text キャプションの設定
 *set  ;[valuename=[strings]] 環境変数の設定、削除
+*setcaption  ;text キャプションの設定
 *setcust  ;カスタマイズ(高速) X_xxx=xxxx / X_xxx:xxx=xxxx
+*setmaskentry  ;[wildcards] PPc 常時エントリマスク設定
 *setentryimage ;filename [/save] サムネイル表示用画像の設定
 	-save ;サムネイルキャッシュ
-*setmaskentry  ;[wildcards] PPc 常時エントリマスク設定
 *setsortentry  ;[option] [XC_sort名] | ソート1[,ソート2[,ソート3]],ソート属性,ソートオプション
 *shownormal  ;[window id] 窓を通常の大きさにする
 *shutdown ;Windows をシャットダウン
@@ -368,9 +420,12 @@
 *unmarkentry  ;[wildcards] エントリマーク解除
 *unpack  ;path 書庫の展開
 *viewoption  ;各種オプション 表示関係オプション
-*viewstyle ;[option] [MC_celS名|directory|separate] エントリ表示変更
+*viewstyle ;[option] [MC_celS名|directory|separate|edit|format] エントリ表示変更
+	directory ;階層表示
+	separate ;ファイル名のみ表示
+	edit ;変更ダイアログ
+	format " ;表示形式"
 	-id ;窓ID毎の設定
-	-format " ;表示形式"
 	-temp ;一時設定
 	-thispath ;現在のディレクトリのみ
 	-thisbranch ;現在のディレクトリとその下層

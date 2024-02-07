@@ -1,4 +1,4 @@
-﻿PPM_PLUGIN_NAME=parsonal-scripts
+﻿PPM_PLUGIN_NAME=parsonal
 
 #Plugin version
 VERSION=0.0.0
@@ -14,7 +14,7 @@ SCRIPT_VERSION=21
 CV8_VERSION=3
 
 #Requires external executables. Separated dy commas
-EXECUTABLES=
+EXECUTABLES=ppxwin
 
 #Requires PPx Modules and Common Archivers Library. Separated dy commas
 MODULES=7-zip,7zca

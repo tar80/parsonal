@@ -1,6 +1,6 @@
 ﻿/* @file Returns the specified value
- * @arg 0 {string} - Specify field name. exists, filetype, ldc, lfitems, targetname
- * @arg 0 {string} - Optional
+ * @arg 0 {string} - Specify field name. exists | filetype | ldc | lfitems | targetname
+ * @arg 1 {string} - Optional
  * @return - Specified value or CASE_EMPTY
  */
 
@@ -15,7 +15,15 @@ const main = (): string => {
   try {
     rep = cmd[args.spec](args.option);
   } catch (err) {
-    rep = PPx[args.spec as never];
+    const ele = args.spec.split('.');
+    const len = ele.length;
+    let i = 1;
+    rep = PPx[ele[0] as never];
+
+    while (i < len) {
+      rep = rep[ele[i] as never];
+      i++;
+    }
   } finally {
     return rep;
   }
@@ -37,6 +45,7 @@ const cmd: Record<string, Function> = {};
 cmd['exists'] = (path: string) => {
   path = path || PPx.EntryName;
   const fso = PPx.CreateObject('Scripting.FileSystemObject');
+
   return fso.FileExists(path) || fso.FolderExists(path) ? '1' : '0';
 };
 
@@ -55,6 +64,7 @@ cmd['lfitems'] = (prop?: id) => {
   let items = [];
   const item = PPx.Entry;
   item.FirstMark;
+
   do {
     items.push(item[prop_]);
   } while (item.NextMark);
@@ -62,7 +72,7 @@ cmd['lfitems'] = (prop?: id) => {
   return items.join(' ');
 };
 
-cmd['targetpath'] = () => PPx.Extract(PPx.Pane.Count === 2 ? '%2' : 'S_ppm#user:work');
+cmd['targetpath'] = () => PPx.Extract('%2') || PPx.Extract('%*getcust(S_ppm#user:work)');
 
 const value = main();
 PPx.result = String(value) || CASE_EMPTY;

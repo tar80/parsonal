@@ -1,0 +1,1 @@
+﻿var t=function(){var t=PPx.windowIDName;if("C_A"===t){var x=PPx.Extract("%*ppxlist(-)").split(",");x.sort((function(t,x){return t<x?1:-1})),t=x[0]}return t}();0!==Number(PPx.Extract('%*extract(C,"%%*js(PPx.result=PPx.SyncView;)")'))&&(PPx.Execute("*execute C,*ppvoption sync off"),PPx.Quit(1)),PPx.Execute("*closeppx "+t);
