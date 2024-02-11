@@ -4,31 +4,8 @@
  * "{dir:'D',arc:'A',img:'I',doc:'D',list:'L',arch:'A',aux:'A',none:'N'}"
  */
 
-import '@ppmdev/polyfills/stringTrim.ts';
-import '@ppmdev/polyfills/stringPrecedes.ts';
-import '@ppmdev/polyfills/arrayIndexOf.ts';
-import '@ppmdev/polyfills/arrayIncludes.ts';
-import '@ppmdev/polyfills/arrayIsArray.ts';
-import '@ppmdev/polyfills/arrayRemoveEmpty.ts';
 import '@ppmdev/polyfills/objectKeys.ts';
-import '@ppmdev/polyfills/objectIsEmpty.ts';
-import '@ppmdev/polyfills/json.ts';
-import type {} from '@ppmdev/modules/types.ts';
-import {} from '@ppmdev/parsers/table.ts';
-import {} from '@ppmdev/modules/ansi.ts';
-import {} from '@ppmdev/modules/data.ts';
-import {} from '@ppmdev/modules/filesystem.ts';
-import {} from '@ppmdev/modules/git.ts';
 import {isEmptyStr} from '@ppmdev/modules/guard.ts';
-import {} from '@ppmdev/modules/io.ts';
-import {} from '@ppmdev/modules/meta.ts';
-import {} from '@ppmdev/modules/path.ts';
-import {} from '@ppmdev/modules/ppm.ts';
-import {} from '@ppmdev/modules/run.ts';
-import {} from '@ppmdev/modules/source.ts';
-import {} from '@ppmdev/modules/window.ts';
-import {} from '@ppmdev/modules/util.ts';
-import debug from '@ppmdev/modules/debug.ts';
 
 const main = (): void => {
   type HotKey = Readonly<typeof hotKey>;

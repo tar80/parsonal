@@ -1,22 +1,19 @@
 /* @file Closed considering ID */
 
-const ppxID = (() => {
-  let id = PPx.windowIDName;
+import {windowID} from '@ppmdev/modules/util.ts';
 
-  if (id === 'C_A') {
-    const idList = PPx.Extract('%*ppxlist(-)').split(',');
-    idList.sort((a, b) => (a < b ? 1 : -1));
-    id = idList[0];
+const ppxID = (() => {
+  let {uid} = windowID();
+  const ignoreID = uid.replace(/^C.+[Aa]$/, 'ignore');
+
+  if (ignoreID === 'ignore') {
+    const idlist = PPx.Extract('%*ppxlist(-)').slice(0, -1).split(',');
+    // idList.sort((a, b) => (a < b ? 1 : -1));
+    uid = idlist[idlist.indexOf(uid) + 1] || idlist[0];
   }
 
-  return id;
+  return uid;
 })();
-const syncviewHwnd = Number(PPx.Extract('%*extract(C,"%%*js(PPx.result=PPx.SyncView;)")'));
+const syncviewHwnd = PPx.Extract('%*extract(C,"%%*js(""PPx.result=PPx.SyncView;"")")');
 
-if (syncviewHwnd !== 0) {
-  PPx.Execute('*execute C,*ppvoption sync off');
-  PPx.Quit(1);
-}
-
-// ppxID === 'C_X' && PPx.Execute('*customize XC_celD=%su"c_celD"');
-PPx.Execute(`*closeppx ${ppxID}`);
+syncviewHwnd !== '0' ? PPx.Execute('*execute C,*ppvoption sync off') : PPx.Execute(`*closeppx ${ppxID}`);

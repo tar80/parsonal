@@ -1,1 +1,1 @@
-﻿for(var e=PPx.EntryDisplayCount;e--;){var t=PPx.Entry.Item(e);t.Size&&PPx.Execute('*delete "'+t.Name+':thumbnail.jpg"')}
+﻿for(var e=PPx.Entry.Item,t=PPx.EntryDisplayCount;t--;){var P=e(t);P.Size&&PPx.Execute('*delete "'+P.Name+':thumbnail.jpg"')}

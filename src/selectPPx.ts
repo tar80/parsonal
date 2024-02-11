@@ -4,16 +4,14 @@
 
 import '@ppmdev/polyfills/arrayIndexOf.ts';
 import '@ppmdev/polyfills/objectKeys.ts';
-import '@ppmdev/polyfills/objectIsEmpty.ts';
 import {isEmptyStr} from '@ppmdev/modules/guard.ts';
 import {writeLines} from '@ppmdev/modules/io.ts';
 import {pathSelf} from '@ppmdev/modules/path.ts';
+import {windowID} from '@ppmdev/modules/util.ts';
 import {tmp} from '@ppmdev/modules/data.ts';
 
-PPx.getValue('selectfocus') === '1' && PPx.Quit(1);
-
 const NAME = {MENU: 'M_temp', PPE: 'PPe', PPE_CLASS: 'PPeditW', SEP: '-- ='};
-const winid = PPx.windowIDName;
+const {uid} = windowID();
 
 const main = (): void => {
   const hwndE = PPx.Extract(`%*findwindowclass(${NAME.PPE_CLASS})`);
@@ -25,7 +23,7 @@ const main = (): void => {
     PPx.Quit(-1);
   }
 
-  ~sortedID.indexOf(winid) && sortedID.splice(sortedID.indexOf(winid), 1);
+  ~sortedID.indexOf(uid) && sortedID.splice(sortedID.indexOf(uid), 1);
   const idCount = sortedID.length;
 
   if (idCount === 1) {
@@ -45,12 +43,10 @@ const main = (): void => {
       PPx.Quit(-1);
     }
 
-    PPx.setValue('selectfocus', 1);
     PPx.Execute(`*setcust @${path}`);
     PPx.Execute(`%k"@down"%:*focus %${NAME.MENU}`);
     PPx.Execute(`*deletecust "${NAME.MENU}"`);
-    PPx.Execute('*wait 1000,2');
-    PPx.setValue('selectfocus', '');
+    PPx.Execute('%K"@LOADCUST"');
   }
 };
 
