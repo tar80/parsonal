@@ -39,9 +39,9 @@ const main = (): void => {
 
   if (reftype === 'MOVIE') {
     PPx.Execute(
-      `%Obd *ppb -c mpv.exe ${path}` +
+      `%Obd *ppb -c mpv.exe "${path}"` +
         ' --framedrop=vo --geometry=%*windowrect(%N.,w)x%*windowrect(%N.,h)+%*windowrect(%N.,l)+%*windowrect(%N.,t)' +
-        ` --loop=no ${path}`
+        ` --loop=no "${path}"`
     );
   } else {
     setupPPv(onThumb, USER_ID);

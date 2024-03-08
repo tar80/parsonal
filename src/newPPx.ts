@@ -43,10 +43,10 @@ const cursorEntry = (): string => {
   line = isEmptyStr(line) ? '' : ` -k *jumpline L${line}`;
 
   if (fso.FileExists(path)) {
-    return ` ${path}${line}`;
+    return ` "${path}"${line}`;
   }
 
-  return ' %R';
+  return ' "%R"';
 };
 
 main();

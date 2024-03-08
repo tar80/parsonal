@@ -4,20 +4,20 @@
 VERSION=0.0.0
 
 #Requires ppm version
-PPM_VERSION=0.93
+PPM_VERSION=0.94
 
 #Requires PPx version
-PPX_VERSION=194
+PPX_VERSION=195
 
 #Requires PPx Script Module version
 SCRIPT_VERSION=21
 CV8_VERSION=3
 
 #Requires external executables. Separated dy commas
-EXECUTABLES=ppxwin
+EXECUTABLES=
 
 #Requires PPx Modules and Common Archivers Library. Separated dy commas
-MODULES=7-zip,7zca
+MODULES=7-zip,7zca,ppxwin
 
 #Comma separated dependent plugins. Just a note
 DEPENDENCIES=vim,neovim,mpv,qutebrowser,ralpha
