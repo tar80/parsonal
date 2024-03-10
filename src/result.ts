@@ -5,27 +5,34 @@
  */
 
 import {actualPaths} from '@ppmdev/modules/path.ts';
+import debug from '@ppmdev/modules/debug.ts';
 
 const CASE_EMPTY = '---';
 
 const main = (): string => {
   const args = adjustArgs();
-  let rep = '';
+  let rep: string | PPx = '';
 
   try {
     rep = cmd[args.spec](args.option);
   } catch (err) {
     const ele = args.spec.split('.');
     const len = ele.length;
-    let i = 1;
-    rep = PPx[ele[0] as never];
-
+    let i = 0;
+    rep = PPx;
     while (i < len) {
-      rep = rep[ele[i] as never];
+      if (len - 1 === i && args.option !== '') {
+        // @ts-ignore
+        rep = rep[ele[i]](args.option);
+      } else {
+        rep = rep[ele[i] as never];
+      }
       i++;
     }
   } finally {
-    return rep;
+    debug.log(rep);
+
+    return rep as string;
   }
 };
 

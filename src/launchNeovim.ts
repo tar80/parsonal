@@ -11,7 +11,7 @@
 type Bool = '0' | '-1';
 type ExOrder = 'edit' | 'args' | 'diff' | 'command';
 type Nvim = {process: Bool; port: string; order: ExOrder; option: string | undefined};
-type OkString = [boolean, string];
+type Ok_String = [boolean, string];
 
 const ATT_ALIAS = 1024;
 const fso = PPx.CreateObject('Scripting.FileSystemObject');
@@ -51,7 +51,7 @@ const adjustArgs = (args = PPx.Arguments): Nvim | void => {
   }
 
   if (!isExOrder(arr[2])) {
-    PPx.Echo(`Wrong value passed. arg2:${arr[2]}`);
+    arr[2] !== '' && PPx.Echo(`Wrong value passed. arg2:${arr[2]}`);
     return;
   }
 
@@ -104,19 +104,19 @@ const extractPath = (option: string | undefined): [boolean, string | string[]] =
 
 const isError = (ok: boolean, data: string | string[]): data is string => !ok;
 const editCmd = {
-  edit({option}: Nvim): OkString {
+  edit({option}: Nvim): Ok_String {
     const [ok, data] = extractPath(option);
 
     return isError(ok, data) ? [false, data] : [true, `edit ${data[0]}`];
   },
-  args({option}: Nvim): OkString {
+  args({option}: Nvim): Ok_String {
     const [ok, data] = extractPath(option);
 
     return isError(ok, data)
       ? [false, data]
       : [true, PPx.EntryMarkCount > 1 ? `args! ${data.join(' ')}` : `edit ${data[0]}`];
   },
-  diff({option}: Nvim): OkString {
+  diff({option}: Nvim): Ok_String {
     const path =
       option ??
       (PPx.EntryMarkCount === 2 ? PPx.Extract('%#;FDCN') : `${PPx.Extract('%FDCN')};${PPx.Extract('%~FDCN')}`);
@@ -124,7 +124,7 @@ const editCmd = {
 
     return isError(ok, data) ? [false, data] : [true, `silent! edit ${data[1]}|silent! vertical diffsplit ${data[0]}`];
   },
-  command({option}: Nvim): OkString {
+  command({option}: Nvim): Ok_String {
     return option == null ? [false, 'Empty command line'] : [true, option];
   }
 };
