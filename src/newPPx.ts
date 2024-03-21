@@ -2,8 +2,8 @@
  * @arg 0 {string} - Type of PPx. 'C' | 'V'
  */
 
-import fso from '@ppmdev/modules/filesystem.ts';
 import {isEmptyStr} from '@ppmdev/modules/guard.ts';
+import {tmp} from '@ppmdev/modules/data.ts';
 
 type PPxType = 'C' | 'V';
 
@@ -20,8 +20,9 @@ const jump = {
   },
   V() {
     const id = nextId('V', 'DEFGHIJKLMNOPQRSTUVW');
+    const path = PPx.Extract('%FDC');
 
-    return PPx.Execute(`*ppv -bootid:${id}${cursorEntry()}`);
+    return PPx.Execute(`*ppv -bootid:${id} ${ftoption(path)} ${path}`);
   }
 } as const;
 
@@ -35,18 +36,19 @@ const nextId = (id: PPxType, letters: string): string => {
   return 'Z';
 };
 
-const cursorEntry = (): string => {
-  const text = PPx.Extract('%*selecttext()');
-  const rgx = /^([^:,]*)[:,]?(\d+)?.*/;
-  let [path, line] = text.replace(rgx, '$1,$2').split(',');
-  path = PPx.Extract(`%*extract(C,"%%*name(DC,""${path}"")")`);
-  line = isEmptyStr(line) ? '' : ` -k *jumpline L${line}`;
+const ftoption = (path: string) => {
+  const stdout = tmp().stdout;
+  PPx.Execute(`%Obds nkf -g ${path}>${stdout}`);
+  const filetype = PPx.Extract(`%*insertValue(${stdout})`);
 
-  if (fso.FileExists(path)) {
-    return ` "${path}"${line}`;
+  switch (filetype) {
+    case 'UTF-8':
+      return '-utf8';
+    case 'UTF-16':
+      return '-utf16';
+    default:
+      return '';
   }
-
-  return ' "%R"';
 };
 
 main();

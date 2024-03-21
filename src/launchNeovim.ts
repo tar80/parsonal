@@ -31,7 +31,7 @@ const main = (): Bool => {
   }
 
   const cmdline = exCmd(nvim.process, data);
-  PPx.Execute(`%Obd nvim --server "\\\\.\\pipe\\nvim.${nvim.port}.0" ${cmdline}`);
+  PPx.Execute(`*launch -noppb -hide nvim --server "\\\\.\\pipe\\nvim.${nvim.port}.0" ${cmdline}`);
 
   return '0';
 };

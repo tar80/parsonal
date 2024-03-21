@@ -80,6 +80,11 @@
 	-ppc ;    現在の窓に合わせる
 	-ppv ;    PPvに合わせる
  
+*ellipsis ;長いファイル名の省略部分
+	top
+	end
+	mid
+ 
 *execinarc ;書庫内ファイルを使用できるようにする
 *execute  ;ID,command 指定PPx上で実行
 *file ;[!]action[,[source][,[destination][,options]]] ファイル操作
