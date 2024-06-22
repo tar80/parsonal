@@ -10,13 +10,14 @@
 
 import '@ppmdev/polyfills/arrayIndexOf.ts';
 import {windowID} from '@ppmdev/modules/util.ts';
+import {safeArgs} from '@ppmdev/modules/argument.ts';
 
 const main = (): void => {
-  const args = adjustArgs();
+  const [reverce, opwin, syncview, ignoretab, ignoreppc, ignoreppv, ignoreppb] = safeArgs(false, false, false, false, false, false, false);
   const win = getIDs();
 
   //syncview
-  if (args.syncview !== '0' && args.ignoreppv === '0') {
+  if (syncview && !ignoreppv) {
     const isSync = PPx.Extract(`%*extract(C,"%%*js(""PPx.result=PPx.SyncView;"")")`);
 
     if (isSync !== '0') {
@@ -26,18 +27,18 @@ const main = (): void => {
     }
   }
 
-  const idlist = getList(args);
+  const idlist = getList(reverce, ignoreppc, ignoreppv, ignoreppb);
   let nextID = idlist[idlist.indexOf(win.id) + 1] || idlist[0];
 
   //opposite window
-  if (PPx.Pane.Count === 1 && args.ignoreppc === '0' && args.opwin !== '0' && win.id === nextID) {
+  if (PPx.Pane.Count === 1 && !ignoreppc && opwin && win.id === nextID) {
     PPx.Execute('%K"@TAB"');
 
     return;
   }
 
   //tabs
-  if (args.ignoreppc === '0' && args.ignoretab !== '0') {
+  if (!ignoreppc && ignoretab) {
     const hasSeparate = PPx.Extract('%*getcust(X_combos)').slice(18, 19);
 
     if (hasSeparate === '1') {
@@ -50,23 +51,6 @@ const main = (): void => {
 
 type ArgsKeys = 'order' | 'opwin' | 'syncview' | 'ignoretab' | 'ignoreppc' | 'ignoreppv' | 'ignoreppb';
 type Args = {[key in ArgsKeys]: string};
-const adjustArgs = (args = PPx.Arguments): Args => {
-  const arr: string[] = ['0', '0', '0', '0', '0', '0'];
-
-  for (let i = 0, k = args.length; i < k; i++) {
-    arr[i] = args.Item(i);
-  }
-
-  return {
-    order: arr[0],
-    opwin: arr[1],
-    syncview: arr[2],
-    ignoretab: arr[3],
-    ignoreppc: arr[4],
-    ignoreppv: arr[5],
-    ignoreppb: arr[6]
-  };
-};
 
 const getIDs = () => {
   PPx.windowIDName = '1';
@@ -77,13 +61,13 @@ const getIDs = () => {
   return {id, pairid, subid: xid[1]};
 };
 
-const getList = (args: Args): string[] => {
-  const c = args.ignoreppc === '0' ? PPx.Extract('%*ppxlist(-C)') : '';
-  const v = args.ignoreppv === '0' ? PPx.Extract('%*ppxlist(-V)') : '';
-  const b = args.ignoreppb === '0' ? PPx.Extract('%*ppxlist(-B)') : '';
+const getList = (reverce: boolean, ignoreppc: boolean, ignoreppv: boolean, ignoreppb: boolean): string[] => {
+  const c = !ignoreppc ? PPx.Extract('%*ppxlist(-C)') : '';
+  const v = !ignoreppv ? PPx.Extract('%*ppxlist(-V)') : '';
+  const b = !ignoreppb ? PPx.Extract('%*ppxlist(-B)') : '';
   const list = `${c}${v}${b}`.slice(0, -1).replace(/_/g, '').split(',');
-  // const sorter = args.order === '0' ? [-1, 1] : [1, -1];
-  // list.sort((a, b) => (a < b ? sorter[0] : sorter[1]));
+  const sorter = !reverce ? [-1, 1] : [1, -1];
+  list.sort((a, b) => (a < b ? sorter[0] : sorter[1]));
 
   return list;
 };

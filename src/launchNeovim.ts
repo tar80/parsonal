@@ -6,56 +6,39 @@
  * @return - Has Error. "-1"(true) | "0"(false)
  */
 
-'use strict';
+import {isBottom} from '@ppmdev/modules/guard.ts';
+import {safeArgs} from '@ppmdev/modules/argument.ts';
 
-type Bool = '0' | '-1';
+type Bool = 'true' | 'false';
 type ExOrder = 'edit' | 'args' | 'diff' | 'command';
-type Nvim = {process: Bool; port: string; order: ExOrder; option: string | undefined};
+type NvimOption = string | undefined;
 type Ok_String = [boolean, string];
 
 const ATT_ALIAS = 1024;
 const fso = PPx.CreateObject('Scripting.FileSystemObject');
 
-const main = (): Bool => {
-  const nvim = adjustArgs();
+const main = (): '0' | '-1' => {
+  const [proc, port, order, opt] = safeArgs(false, '100', 'edit', undefined);
+  const isExOrder = (v: string): v is ExOrder => /^(edit|args|diff|command)$/.test(v);
 
-  if (!nvim) {
+  if (!isExOrder(order)) {
+    PPx.Echo(`Wrong value passed. arg2:${order}`);
+
     return '-1';
   }
 
-  const [ok, data] = editCmd[nvim.order](nvim);
+  const [ok, data] = editCmd[order](opt);
 
   if (!ok) {
     PPx.linemessage(`!"${data}`);
     return '-1';
   }
 
-  const cmdline = exCmd(nvim.process, data);
-  PPx.Execute(`*launch -noppb -hide nvim --server "\\\\.\\pipe\\nvim.${nvim.port}.0" ${cmdline}`);
+  const hasProc = proc.toString() as Bool;
+  const cmdline = exCmd(hasProc, data);
+  PPx.Execute(`*launch -noppb -hide nvim --server "\\\\.\\pipe\\nvim.${port}.0" ${cmdline}`);
 
   return '0';
-};
-
-const adjustArgs = (args = PPx.Arguments): Nvim | void => {
-  const arr: [string, string, string, string | undefined] = ['0', '100', 'edit', undefined];
-  const isBool = (v: string): v is Bool => /0|-1/.test(v);
-  const isExOrder = (v: string): v is ExOrder => /^(edit|args|diff|command)$/.test(v);
-
-  for (let i = 0, k = args.length; i < k; i++) {
-    arr[i] = args.Item(i);
-  }
-
-  if (!isBool(arr[0])) {
-    PPx.Echo(`Wrong value passed. arg0:${arr[0]}`);
-    return;
-  }
-
-  if (!isExOrder(arr[2])) {
-    arr[2] !== '' && PPx.Echo(`Wrong value passed. arg2:${arr[2]}`);
-    return;
-  }
-
-  return {process: arr[0], port: arr[1], order: arr[2], option: arr[3]};
 };
 
 const getActualPath = (path: string): string => {
@@ -66,7 +49,7 @@ const getActualPath = (path: string): string => {
   return path.replace(/([^\\])\s/g, '$1\\ ');
 };
 
-const extractPath = (option: string | undefined): [boolean, string | string[]] => {
+const extractPath = (option: NvimOption): [boolean, string | string[]] => {
   const pathString = option ? option.replace(/\\\s/g, ' ') : PPx.Extract('%#;FDCN');
   const markCount = !option ? PPx.EntryMarkCount : 2;
   const splitter = ~pathString.indexOf(';') ? ';' : ' ';
@@ -104,35 +87,31 @@ const extractPath = (option: string | undefined): [boolean, string | string[]] =
 
 const isError = (ok: boolean, data: string | string[]): data is string => !ok;
 const editCmd = {
-  edit({option}: Nvim): Ok_String {
+  edit(option: NvimOption): Ok_String {
     const [ok, data] = extractPath(option);
 
     return isError(ok, data) ? [false, data] : [true, `edit ${data[0]}`];
   },
-  args({option}: Nvim): Ok_String {
+  args(option: NvimOption): Ok_String {
     const [ok, data] = extractPath(option);
 
-    return isError(ok, data)
-      ? [false, data]
-      : [true, PPx.EntryMarkCount > 1 ? `args! ${data.join(' ')}` : `edit ${data[0]}`];
+    return isError(ok, data) ? [false, data] : [true, PPx.EntryMarkCount > 1 ? `args! ${data.join(' ')}` : `edit ${data[0]}`];
   },
-  diff({option}: Nvim): Ok_String {
-    const path =
-      option ??
-      (PPx.EntryMarkCount === 2 ? PPx.Extract('%#;FDCN') : `${PPx.Extract('%FDCN')};${PPx.Extract('%~FDCN')}`);
+  diff(option: NvimOption): Ok_String {
+    const path = option ?? (PPx.EntryMarkCount === 2 ? PPx.Extract('%#;FDCN') : `${PPx.Extract('%FDCN')};${PPx.Extract('%~FDCN')}`);
     const [ok, data] = extractPath(path);
 
     return isError(ok, data) ? [false, data] : [true, `silent! edit ${data[1]}|silent! vertical diffsplit ${data[0]}`];
   },
-  command({option}: Nvim): Ok_String {
-    return option == null ? [false, 'Empty command line'] : [true, option];
+  command(option: NvimOption): Ok_String {
+    return isBottom(option) ? [false, 'Empty command line'] : [true, option];
   }
 };
 
-const exCmd = (process: Bool, cmdline: string): string =>
+const exCmd = (hasProc: Bool, cmdline: string): string =>
   ({
-    '0': `--remote-send "<Cmd>${cmdline}<CR>"`,
-    '-1': `--remote-send "<Cmd>stopinsert|tabnew|${cmdline}<CR>"`
-  })[process];
+    'false': `--remote-send "<Cmd>${cmdline}<CR>"`,
+    'true': `--remote-send "<Cmd>stopinsert|tabnew|${cmdline}<CR>"`
+  })[hasProc];
 
 PPx.result = main();

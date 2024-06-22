@@ -4,12 +4,13 @@
 
 import {isEmptyStr} from '@ppmdev/modules/guard.ts';
 import {tmp} from '@ppmdev/modules/data.ts';
+import {safeArgs} from '@ppmdev/modules/argument.ts';
 
-type PPxType = 'C' | 'V';
+type xUi = 'C' | 'V';
 
 const main = (): void => {
-  const id = PPx.Arguments.length ? PPx.Arguments.Item(0) : PPx.windowIDName.substring(0, 1);
-  jump[id as PPxType]();
+  const [ui] = safeArgs(PPx.windowIDName.substring(0, 1));
+  jump[ui as xUi]();
 };
 
 const jump = {
@@ -26,7 +27,7 @@ const jump = {
   }
 } as const;
 
-const nextId = (id: PPxType, letters: string): string => {
+const nextId = (id: xUi, letters: string): string => {
   for (let i = 0, k = letters.length; i < k; i++) {
     if (isEmptyStr(PPx.Extract(`%N${id}${letters[i]}`))) {
       return letters[i];

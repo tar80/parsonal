@@ -5,25 +5,26 @@
  */
 
 import {actualPaths} from '@ppmdev/modules/path.ts';
+import {safeArgs} from '@ppmdev/modules/argument.ts';
 import debug from '@ppmdev/modules/debug.ts';
 
 const CASE_EMPTY = '---';
 
 const main = (): string => {
-  const args = adjustArgs();
+  const [spec, opt] = safeArgs('', '');
   let rep: string | PPx = '';
 
   try {
-    rep = cmd[args.spec](args.option);
+    rep = cmd[spec](opt);
   } catch (err) {
-    const ele = args.spec.split('.');
+    const ele = spec.split('.');
     const len = ele.length;
     let i = 0;
     rep = PPx;
     while (i < len) {
-      if (len - 1 === i && args.option !== '') {
+      if (len - 1 === i && opt !== '') {
         // @ts-ignore
-        rep = rep[ele[i]](args.option);
+        rep = rep[ele[i]](opt);
       } else {
         rep = rep[ele[i] as never];
       }
@@ -34,16 +35,6 @@ const main = (): string => {
 
     return rep as string;
   }
-};
-
-const adjustArgs = (args = PPx.Arguments): {spec: string; option: string} => {
-  const arr: string[] = ['', ''];
-
-  for (let i = 0, k = args.length; i < k; i++) {
-    arr[i] = args.Item(i);
-  }
-
-  return {spec: arr[0], option: arr[1]};
 };
 
 const cmd: Record<string, Function> = {};

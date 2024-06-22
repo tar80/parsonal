@@ -4,11 +4,13 @@
 
 import '@ppmdev/polyfills/arrayIndexOf.ts';
 import '@ppmdev/polyfills/objectKeys.ts';
+import {info} from '@ppmdev/modules/data.ts';
 import {isEmptyStr} from '@ppmdev/modules/guard.ts';
 import {writeLines} from '@ppmdev/modules/io.ts';
 import {pathSelf} from '@ppmdev/modules/path.ts';
 import {windowID} from '@ppmdev/modules/util.ts';
 import {tmp} from '@ppmdev/modules/data.ts';
+import {safeArgs} from '@ppmdev/modules/argument.ts';
 
 const NAME = {MENU: 'M_temp', PPE: 'PPe', PPE_CLASS: 'PPeditW', SEP: '-- ='};
 const {uid} = windowID();
@@ -34,7 +36,7 @@ const main = (): void => {
       path,
       data: createMenu(idCount, sortedID, hwndE),
       enc: 'utf16le',
-      linefeed: '\r\n',
+      linefeed: info.nlcode,
       overwrite: true
     });
 
@@ -51,21 +53,21 @@ const main = (): void => {
 };
 
 const sortPPxID = (hwndE: string): string[] | void => {
-  const arg = PPx.Arguments.length > 0 ? PPx.Arguments.Item(0) : '';
+  const [opt] = safeArgs('');
   const rgx = /^[BCV#]#?$/;
 
-  if (!isEmptyStr(arg) && !rgx.test(arg)) {
+  if (!isEmptyStr(opt) && !rgx.test(opt)) {
     return;
   }
 
-  const ids = PPx.Extract(`%*ppxlist(-${arg})`).slice(0, -1).split(',');
+  const ids = PPx.Extract(`%*ppxlist(-${opt})`).slice(0, -1).split(',');
   ids.sort((a, b) => (a.toLowerCase() < b.toLowerCase() ? -1 : 1));
   hwndE !== '0' && ids.push(NAME.PPE);
 
   return ids;
 };
 
-const createFileName = (id: string, macro: string): string =>
+const buildFileName = (id: string, macro: string): string =>
   PPx.Extract(`%*extract(${id},"${macro}")`).slice(-30).replace(/\\t/g, '\\\\t');
 const addSeparator = (items: string[], need: boolean): boolean => {
   const len = items.length;
@@ -89,11 +91,11 @@ const createMenu = (count: number, ids: string[], hwndE: string): string[] => {
     key = id.slice(-1);
 
     if (target === 'C_') {
-      items.ppc.push(`PPc:&${key} ${createFileName(id, '%%FD')} = ${id}`);
+      items.ppc.push(`PPc:&${key} ${buildFileName(id, '%%FD')} = ${id}`);
     } else if (target === 'V_') {
-      items.ppv.push(`PPv:&${key} ${createFileName(id, '%%FC')} = ${id}`);
+      items.ppv.push(`PPv:&${key} ${buildFileName(id, '%%FC')} = ${id}`);
     } else if (target === 'B_') {
-      items.ppb.push(`PPb:&${key} ${createFileName(id, '%%FD')} = ${id}`);
+      items.ppb.push(`PPb:&${key} ${buildFileName(id, '%%FD')} = ${id}`);
     } else if (target === 'cs') {
       const hwndCS = PPx.Extract('%*findwindowtitle("PPx Customizer")');
       items.ppcust.push(`PPcust:&${key} = #${hwndCS}`);

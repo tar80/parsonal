@@ -2,18 +2,31 @@ parsonal
 
 Author: tar80
 License: MIT
-Repository: 
+Repository: tar80/personal
 ===============================================================================
 構成ファイルの説明
 
+complist/
+	ユーザー補完リスト
+
 config/	関連した設定ごとにまとめたPPxCfgファイル
-	_default.json	色設定
+	_default.json		色設定
 
 dist/
-	launchNeovim.js	Neovimの起動オプションを設定し実行する
+	contextExt.ts		拡張子判別コンテキストメニュー
+	expandPDF.js		PDFファイルの書庫展開
+	launchNeovim.js		Neovimの起動
+	launchViewer.ts		拡張子判別ビューア起動
+	newPPx.ts		新規PPx起動
+	quitPPx.ts		条件判別PPx終了
+	result.ts		PPx.resultのラッパー
+	rotateViewstyle.ts	条件判別スタイル変更
+	selectPPx.ts		*selectppxのラッパー
+	shiftPPx.ts		条件判別PPxフォーカス
+	thumbDelete.ts		サムネイルキャッシュ一括削除
 
 switchmenu/
-	keyset.cfg	キー設定変更メニュー
+	keyset.cfg		キー設定変更メニュー
 
 ===============================================================================
 vim:tw=79:ts=8:sts=0:sw=4:norl:noet:fen:

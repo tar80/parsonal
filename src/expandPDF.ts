@@ -5,16 +5,15 @@
 
 import fso from '@ppmdev/modules/filesystem.ts';
 import {read, writeLines} from '@ppmdev/modules/io.ts';
+import {safeArgs} from '@ppmdev/modules/argument.ts';
 
-const GS = 'gswin64c.exe';
+const GS = `%'scoop'\\ghostscript\\current\\gswin64c.exe`;
 const CMD = `-dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r400 -dTextAlphaBits=4 -dDownScaleFactor=2`;
 const UPPER_LIMIT = 99;
 
 const main = (): void => {
-  const args = adjustArgs();
+  const [path, pageCount] = safeArgs(PPx.Extract('%FDC'), UPPER_LIMIT);
   const cwd = PPx.Extract('%FD');
-  const path = args.path || PPx.Extract('%FDC');
-  const last = args.last || UPPER_LIMIT;
   const tempDir = getDirPath(path);
 
   if (PPx.GetFileInformation(path) !== ':PDF') {
@@ -29,7 +28,7 @@ const main = (): void => {
     return;
   }
 
-  const pages = pageNumber(data, last);
+  const pages = pageNumber(data, pageCount);
 
   if (pages === 0) {
     PPx.linemessage('Could not get page number');
@@ -54,16 +53,6 @@ const main = (): void => {
   }
 
   PPx.Execute(`*jumppath ${lfPath}`);
-};
-
-const adjustArgs = (args = PPx.Arguments): {path?: string; last?: number} => {
-  const arr: [string?, number?] = [];
-
-  for (let i = 0, k = args.length; i < k; i++) {
-    arr[i] = args.Item(i);
-  }
-
-  return {path: arr[0], last: arr[1]};
 };
 
 const getDirPath = (path: string): string => {

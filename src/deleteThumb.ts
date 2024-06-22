@@ -1,10 +1,6 @@
 /* Delete thumbnails */
 
-let item = PPx.Entry.Item;
-
-for (let i = PPx.EntryDisplayCount; i--; ) {
-  const entry = item(i);
-
+for (const entry = PPx.Entry.AllEntry; !entry.atEnd(); entry.moveNext()) {
   if (entry.Size) {
     PPx.Execute(`*delete "${entry.Name}:thumbnail.jpg"`);
   }

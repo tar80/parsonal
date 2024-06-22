@@ -8,9 +8,9 @@ import {actualParentDirectory} from '@ppmdev/modules/util.ts';
 
 type ExtTypes = keyof typeof EXT;
 const EXT = {
-  DOC: [ '.txt', '.ini', 'log', '.cfg', '.html', '.md', '.json', '.yml', '.yaml', '.toml', '.js', '.ts', '.vbs', '.vim', '.lua' ],
-  IMAGE: ['.jpg', '.jpeg', '.bmp', '.png', '.gif', '.vch', '.edg', '.webp', '.tif', '.tiff'],
-  MOVIE: ['.3gp', '.avi', '.mp4', '.mpg', '.qt', '.ebml', '.webm']
+  doc: [ '.txt', '.ini', 'log', '.cfg', '.html', '.md', '.json', '.yml', '.yaml', '.toml', '.js', '.ts', '.vbs', '.vim', '.lua' ],
+  image: ['.jpg', '.jpeg', '.bmp', '.png', '.gif', '.vch', '.edg', '.webp', '.tif', '.tiff'],
+  movie: ['.3gp', '.avi', '.mp4', '.mpg', '.qt', '.ebml', '.webm']
 };
 const USER_ID = 'launchppv';
 const PPV_ID = 'Z';
@@ -19,7 +19,7 @@ const PPV_POS = '3';
 const main = (): void => {
   const fileext = PPx.Extract('.%t').toLowerCase();
   const reftype: string | void =
-    PPx.Arguments.length > 0 ? PPx.Arguments.Item(0).toUpperCase() : getExtentions(fileext);
+    PPx.Arguments.length > 0 ? PPx.Argument(0).toUpperCase() : getExtentions(fileext);
   const onThumb: boolean = PPx.windowIDName === `C_${PPx.Extract('%*getcust(S_ppm#user:thumbppc)')}`;
 
   if (PPx.DirectoryType >= 63) {
