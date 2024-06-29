@@ -23,7 +23,7 @@ dist/
 	rotateViewstyle.ts	条件判別スタイル変更
 	selectPPx.ts		*selectppxのラッパー
 	shiftPPx.ts		条件判別PPxフォーカス
-	thumbDelete.ts		サムネイルキャッシュ一括削除
+	deleteThumb.ts		サムネイルキャッシュ一括削除
 
 switchmenu/
 	keyset.cfg		キー設定変更メニュー

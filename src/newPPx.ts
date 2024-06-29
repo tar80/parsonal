@@ -23,7 +23,8 @@ const jump = {
     const id = nextId('V', 'DEFGHIJKLMNOPQRSTUVW');
     const path = PPx.Extract('%FDC');
 
-    return PPx.Execute(`*ppv -bootid:${id} ${ftoption(path)} ${path}`);
+    return PPx.Execute(`*ppv -bootid:${id} ${path}`);
+    // return PPx.Execute(`*ppv -bootid:${id} ${ftoption(path)} ${path}`);
   }
 } as const;
 
