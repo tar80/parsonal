@@ -9,7 +9,7 @@ import {safeArgs} from '@ppmdev/modules/argument.ts';
 type xUi = 'C' | 'V';
 
 const main = (): void => {
-  const [ui] = safeArgs(PPx.windowIDName.substring(0, 1));
+  const [ui] = safeArgs(PPx.WindowIDName.substring(0, 1));
   jump[ui as xUi]();
 };
 

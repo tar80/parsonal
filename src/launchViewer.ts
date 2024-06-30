@@ -20,7 +20,7 @@ const main = (): void => {
   const fileext = PPx.Extract('.%t').toLowerCase();
   const reftype: string | void =
     PPx.Arguments.length > 0 ? PPx.Argument(0).toUpperCase() : getExtentions(fileext);
-  const onThumb: boolean = PPx.windowIDName === `C_${PPx.Extract('%*getcust(S_ppm#user:thumbppc)')}`;
+  const onThumb: boolean = PPx.WindowIDName === `C_${PPx.Extract('%*getcust(S_ppm#user:thumbppc)')}`;
 
   if (PPx.DirectoryType >= 63) {
     if (reftype === 'MOVIE' || !!PPx.Execute('%"launchPPv.ts"%Q"書庫内ファイルを開きます"')) {

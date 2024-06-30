@@ -53,7 +53,7 @@ type ArgsKeys = 'order' | 'opwin' | 'syncview' | 'ignoretab' | 'ignoreppc' | 'ig
 type Args = {[key in ArgsKeys]: string};
 
 const getIDs = () => {
-  PPx.windowIDName = '1';
+  PPx.WindowIDName = '1';
   const {id, uid} = windowID();
   const xid = uid.split('_');
   const pairid = xid[0].indexOf('C') === 0 ? 'V' : 'C';
@@ -74,13 +74,12 @@ const getList = (reverce: boolean, ignoreppc: boolean, ignoreppv: boolean, ignor
 
 const tabExtract = (target: number): string[] => {
   const skipTabs: string[] = [];
-  // @ts-ignore
-  const tabs = PPx.Pane.item(target).Tab;
-  const currentIdname = tabs(-1).IDName;
+  const pane = (num: number) => PPx.Pane.Item(num).Tab;
+  const currentIdname = pane(-1).IDName;
   let idname: string;
 
-  for (let i = 0, k = tabs.length; i < k; i++) {
-    idname = tabs(i).IDName;
+  for (let i = 0, k = pane(target).length; i < k; i++) {
+    idname = pane(i).IDName;
     idname !== currentIdname && skipTabs.push(idname);
   }
 
