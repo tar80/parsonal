@@ -34,7 +34,7 @@ const main = (): void => {
     return;
   }
 
-  const filename = PPx.Extract('%*name(C,"%FC")');
+  const filename = PPx.Extract('%*name(CN,"%FCN")');
   const path = `${actualParentDirectory()}\\${filename}`;
 
   if (reftype === 'MOVIE') {
@@ -46,7 +46,7 @@ const main = (): void => {
   } else {
     setupPPv(onThumb, USER_ID);
     PPx.Execute(`*setcust X_vpos=${PPV_POS}`);
-    PPx.Execute(`%Oi *ppv -bootid:${PPV_ID} ${path}`);
+    PPx.Execute(`%Oi *ppv -bootid:${PPV_ID} "${path}"`);
 
     const mask = onThumb ? 'a:d-' : `path:,${EXT[reftype as ExtTypes]}`;
     PPx.Execute(`*maskentry -temp ${mask}`);
