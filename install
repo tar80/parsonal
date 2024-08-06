@@ -26,7 +26,7 @@ DEPENDENCIES=vim,neovim,mpv,qutebrowser,ralpha
 #CodeType permisson. 0:No restriction | 1:Not use multiByte | 2:Not use unicode
 CODETYPE_PERMISSION=1
 
-#ScriptType permisson. 0:No restriction | 1:JS9(5.7) | 2:JS9(5.8) | 3:JS9(ES5) | 4:Chakra(ES6) | 5:CV8(ESNEXT)
+#ScriptType permisson. 0:No restriction | 1:JS9(5.7) | 2:JS9(5.8) | 3:JS9(ES5) | 4:Chakra(ES6) | 5:CV8(ES2021) | 6:QuickJS(ES2023)
 SCRIPTTYPE_PERMISSION=0
 
 #To copy files in the Sheet directory. true | false

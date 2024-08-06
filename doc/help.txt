@@ -13,17 +13,17 @@ config/	関連した設定ごとにまとめたPPxCfgファイル
 	_default.json		色設定
 
 dist/
-	contextExt.ts		拡張子判別コンテキストメニュー
+	contextExt.js		拡張子判別コンテキストメニュー
 	expandPDF.js		PDFファイルの書庫展開
 	launchNeovim.js		Neovimの起動
-	launchViewer.ts		拡張子判別ビューア起動
-	newPPx.ts		新規PPx起動
-	quitPPx.ts		条件判別PPx終了
-	result.ts		PPx.resultのラッパー
-	rotateViewstyle.ts	条件判別スタイル変更
-	selectPPx.ts		*selectppxのラッパー
-	shiftPPx.ts		条件判別PPxフォーカス
-	deleteThumb.ts		サムネイルキャッシュ一括削除
+	launchViewer.js		拡張子判別ビューア起動
+	newPPx.js		新規PPx起動
+	quitPPx.js		条件判別PPx終了
+	result.js		PPx.resultのラッパー
+	rotateViewstyle.js	条件判別スタイル変更
+	selectPPx.js		*selectppxのラッパー
+	shiftPPx.js		条件判別PPxフォーカス
+	deleteThumb.js		サムネイルキャッシュ一括削除
 
 switchmenu/
 	keyset.cfg		キー設定変更メニュー
