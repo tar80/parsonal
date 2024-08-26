@@ -2,9 +2,9 @@
  * @arg 0 {string} - Type of PPx. 'C' | 'V'
  */
 
-import {isEmptyStr} from '@ppmdev/modules/guard.ts';
-import {tmp} from '@ppmdev/modules/data.ts';
 import {safeArgs} from '@ppmdev/modules/argument.ts';
+import {isEmptyStr} from '@ppmdev/modules/guard.ts';
+import {ppvCmdline} from './mod/core.ts';
 
 type xUi = 'C' | 'V';
 
@@ -21,10 +21,9 @@ const jump = {
   },
   V() {
     const id = nextId('V', 'DEFGHIJKLMNOPQRSTUVW');
-    const path = PPx.Extract('%FDC');
+    const path = PPx.Extract('%FDCN');
 
-    return PPx.Execute(`*ppv -bootid:${id} ${path}`);
-    // return PPx.Execute(`*ppv -bootid:${id} ${ftoption(path)} ${path}`);
+    return PPx.Execute(`*ppv -bootid:${id} ${ppvCmdline(path)}`);
   }
 } as const;
 
@@ -36,21 +35,6 @@ const nextId = (id: xUi, letters: string): string => {
   }
 
   return 'Z';
-};
-
-const ftoption = (path: string) => {
-  const stdout = tmp().stdout;
-  PPx.Execute(`%Obds nkf -g ${path}>${stdout}`);
-  const filetype = PPx.Extract(`%*insertValue(${stdout})`);
-
-  switch (filetype) {
-    case 'UTF-8':
-      return '-utf8';
-    case 'UTF-16':
-      return '-utf16';
-    default:
-      return '';
-  }
 };
 
 main();

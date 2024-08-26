@@ -63,7 +63,7 @@ type Item = keyof typeof items;
 const items = {
   dir: ['DIR'],
   arc: ['7Z', 'CAB', 'LZH', 'MSI', 'RAR', 'ZIP'],
-  img: ['BMP', 'EDG', 'GIF', 'JPEG', 'JPG', 'PNG', 'VCH'],
+  img: ['BMP', 'EDG', 'GIF', 'JPEG', 'JPG', 'PNG', 'VCH', 'AVIF', 'WEBP'],
   doc: ['AHK', 'INI', 'CFG', 'JS', 'JSON', 'LOG', 'LUA', 'MD', 'TOML', 'TXT', 'TS', 'VIM', 'YAML', 'YML']
 } as const;
 

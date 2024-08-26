@@ -4,15 +4,15 @@
  * @return - Specified value or CASE_EMPTY
  */
 
-import {actualPaths} from '@ppmdev/modules/path.ts';
 import {safeArgs} from '@ppmdev/modules/argument.ts';
 import debug from '@ppmdev/modules/debug.ts';
+import {actualPaths} from '@ppmdev/modules/path.ts';
 
 const CASE_EMPTY = '---';
 
 const main = (): string => {
   const [spec, opt] = safeArgs('', '');
-  let rep: string | PPx = '';
+  let rep = '';
 
   try {
     rep = cmd[spec](opt);
@@ -20,27 +20,26 @@ const main = (): string => {
     const ele = spec.split('.');
     const len = ele.length;
     let i = 0;
-    rep = PPx;
     while (i < len) {
       if (len - 1 === i && opt !== '') {
         // @ts-ignore
-        rep = rep[ele[i]](opt);
+        rep = PPx[ele[i]](opt);
       } else {
-        rep = rep[ele[i] as never];
+        rep = PPx[ele[i] as never];
       }
       i++;
     }
   } finally {
     debug.log(rep);
-
-    return rep as string;
   }
+
+  return rep as string;
 };
 
 const cmd: Record<string, Function> = {};
 
 // %FDCなど複数回パスを送りたいときは引数で指定する
-cmd['exists'] = (path: string) => {
+cmd['exists'] = (path: string): string => {
   path = path || PPx.EntryName;
   const fso = PPx.CreateObject('Scripting.FileSystemObject');
 

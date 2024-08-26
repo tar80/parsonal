@@ -3,16 +3,16 @@
  * @arg 1 {number} - Specify the maximum number of pages
  */
 
+import {safeArgs} from '@ppmdev/modules/argument.ts';
 import fso from '@ppmdev/modules/filesystem.ts';
 import {read, writeLines} from '@ppmdev/modules/io.ts';
-import {safeArgs} from '@ppmdev/modules/argument.ts';
 
 const GS = `%'scoop'\\ghostscript\\current\\gswin64c.exe`;
-const CMD = `-dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r400 -dTextAlphaBits=4 -dDownScaleFactor=2`;
-const UPPER_LIMIT = 99;
+const CMD = '-dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r400 -dTextAlphaBits=4 -dDownScaleFactor=2';
+const PAGE_LIMIT = 99;
 
 const main = (): void => {
-  const [path, pageCount] = safeArgs(PPx.Extract('%FDC'), UPPER_LIMIT);
+  const [path, pageCount] = safeArgs(PPx.Extract('%FDC'), PAGE_LIMIT);
   const cwd = PPx.Extract('%FD');
   const tempDir = getDirPath(path);
 
@@ -47,9 +47,7 @@ const main = (): void => {
       return;
     }
 
-    PPx.Execute(
-      `%On *cd ${tempDir}%:*ppb -c %(${GS} ${CMD} -dFirstPage=1 -dLastPage=${pages} -sOutputFile="%%03d" "${path}"%)`
-    );
+    PPx.Execute(`%On *cd ${tempDir}%:*ppb -c %(${GS} ${CMD} -dFirstPage=1 -dLastPage=${pages} -sOutputFile="%%03d" "${path}"%)`);
   }
 
   PPx.Execute(`*jumppath ${lfPath}`);

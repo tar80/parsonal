@@ -6,8 +6,8 @@
  * @return - Has Error. "-1"(true) | "0"(false)
  */
 
-import {isBottom} from '@ppmdev/modules/guard.ts';
 import {safeArgs} from '@ppmdev/modules/argument.ts';
+import {isBottom} from '@ppmdev/modules/guard.ts';
 
 type Bool = 'true' | 'false';
 type ExOrder = 'edit' | 'args' | 'diff' | 'command';
@@ -22,7 +22,7 @@ const main = (): '0' | '-1' => {
   const isExOrder = (v: string): v is ExOrder => /^(edit|args|diff|command)$/.test(v);
 
   if (!isExOrder(order)) {
-    PPx.Echo(`Wrong value passed. arg2:${order}`);
+    PPx.Echo(`Invalid argument2:${order}`);
 
     return '-1';
   }
@@ -42,8 +42,7 @@ const main = (): '0' | '-1' => {
 };
 
 const getActualPath = (path: string): string => {
-  const file = fso.GetFile(path);
-  const isAlias = file.Attributes & ATT_ALIAS;
+  const isAlias = PPx.Entry.Attributes & ATT_ALIAS;
   path = isAlias ? PPx.Extract(`%*linkedpath(${path})`) : path;
 
   return path.replace(/([^\\])\s/g, '$1\\ ');
@@ -57,7 +56,7 @@ const extractPath = (option: NvimOption): [boolean, string | string[]] => {
   const len = paths.length;
   const actualPath: string[] = [];
 
-  for (let i = 0, path; i < len; i++) {
+  for (let i = 0, path: string; i < len; i++) {
     path = paths[i].replace(/"/g, '');
 
     if (fso.FileExists(path)) {
@@ -77,7 +76,7 @@ const extractPath = (option: NvimOption): [boolean, string | string[]] => {
       }
 
       if (!isExist) {
-        return [false, `Failed to extract path`];
+        return [false, 'Failed to extract path'];
       }
     }
   }
@@ -110,8 +109,8 @@ const editCmd = {
 
 const exCmd = (hasProc: Bool, cmdline: string): string =>
   ({
-    'false': `--remote-send "<Cmd>${cmdline}<CR>"`,
-    'true': `--remote-send "<Cmd>stopinsert|tabnew|${cmdline}<CR>"`
+    false: `--remote-send "<Cmd>${cmdline}<CR>"`,
+    true: `--remote-send "<Cmd>stopinsert|tabnew|${cmdline}<CR>"`
   })[hasProc];
 
 PPx.result = main();

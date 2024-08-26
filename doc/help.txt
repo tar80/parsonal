@@ -13,17 +13,19 @@ config/	関連した設定ごとにまとめたPPxCfgファイル
 	_default.json		色設定
 
 dist/
+	aliasRegister.js	シェルコマンドのエイリアス登録
 	contextExt.js		拡張子判別コンテキストメニュー
+	deleteThumb.js		サムネイルキャッシュ一括削除
 	expandPDF.js		PDFファイルの書庫展開
 	launchNeovim.js		Neovimの起動
 	launchViewer.js		拡張子判別ビューア起動
 	newPPx.js		新規PPx起動
 	quitPPx.js		条件判別PPx終了
 	result.js		PPx.resultのラッパー
-	rotateViewstyle.js	条件判別スタイル変更
+	rotateViewstyle.stay.js	条件判別スタイル変更
 	selectPPx.js		*selectppxのラッパー
+	shellcmdRejister.js	PPcの環境変数にシェルコマンドのパスを登録
 	shiftPPx.js		条件判別PPxフォーカス
-	deleteThumb.js		サムネイルキャッシュ一括削除
 
 switchmenu/
 	keyset.cfg		キー設定変更メニュー
