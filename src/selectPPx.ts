@@ -21,7 +21,7 @@ const main = (): void => {
   const {scriptName} = pathSelf();
 
   if (!sortedID) {
-    PPx.Echo(`${scriptName}: 引数が不正`);
+    PPx.Echo(`${scriptName}: ${PPx.Extract('%*errormsg(10022)')}`);
     PPx.Quit(-1);
   }
 
@@ -68,7 +68,7 @@ const sortPPxID = (hwndE: string): string[] | void => {
 };
 
 const buildFileName = (id: string, macro: string): string =>
-  PPx.Extract(`%*extract(${id},"${macro}")`).slice(-30).replace(/\\t/g, '\\\\t');
+  PPx.Extract(`%*extract(${id},"${macro}")`).slice(-30);
 const addSeparator = (items: string[], need: boolean): boolean => {
   const len = items.length;
 
@@ -91,16 +91,16 @@ const createMenu = (count: number, ids: string[], hwndE: string): string[] => {
     key = id.slice(-1);
 
     if (target === 'C_') {
-      items.ppc.push(`PPc:&${key} ${buildFileName(id, '%%FD')} = ${id}`);
+      items.ppc.push(`PPc:&${key}\\t${buildFileName(id, '%%FD')} = ${id}`);
     } else if (target === 'V_') {
-      items.ppv.push(`PPv:&${key} ${buildFileName(id, '%%FC')} = ${id}`);
+      items.ppv.push(`PPv:&${key}\\t${buildFileName(id, '%%FC')} = ${id}`);
     } else if (target === 'B_') {
-      items.ppb.push(`PPb:&${key} ${buildFileName(id, '%%FD')} = ${id}`);
+      items.ppb.push(`PPb:&${key}\\t<console> = ${id}`);
     } else if (target === 'cs') {
       const hwndCS = PPx.Extract('%*findwindowtitle("PPx Customizer")');
-      items.ppcust.push(`PPcust:&${key} = #${hwndCS}`);
+      items.ppcust.push(`PPcust:&${key}\\t<customizer> = #${hwndCS}`);
     } else if (target === 'PP') {
-      items.ppe.push(`PPe:&@ = #${hwndE}`);
+      items.ppe.push(`PPe:&@\\t<editor>= #${hwndE}`);
     }
   }
 

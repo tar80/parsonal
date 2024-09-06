@@ -1,4 +1,4 @@
-# ppm parsonal configrations
+# ppm tar80 personal configrations
 
 個人的なppmの設定集です。  
 利用・改変はかまいせんがプラグインとしてのサポートや動作の保証はできません。

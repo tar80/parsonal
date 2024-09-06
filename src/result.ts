@@ -12,7 +12,7 @@ const CASE_EMPTY = '---';
 
 const main = (): string => {
   const [spec, opt] = safeArgs('', '');
-  let rep = '';
+  let rep: any = PPx;
 
   try {
     rep = cmd[spec](opt);
@@ -22,10 +22,9 @@ const main = (): string => {
     let i = 0;
     while (i < len) {
       if (len - 1 === i && opt !== '') {
-        // @ts-ignore
-        rep = PPx[ele[i]](opt);
+        rep = rep[ele[i]](opt);
       } else {
-        rep = PPx[ele[i] as never];
+        rep = rep[ele[i] as never];
       }
       i++;
     }
@@ -36,7 +35,7 @@ const main = (): string => {
   return rep as string;
 };
 
-const cmd: Record<string, Function> = {};
+const cmd: Record<string, (arg: any) => string> = {};
 
 // %FDCなど複数回パスを送りたいときは引数で指定する
 cmd['exists'] = (path: string): string => {
@@ -46,9 +45,9 @@ cmd['exists'] = (path: string): string => {
   return fso.FileExists(path) || fso.FolderExists(path) ? '1' : '0';
 };
 
-cmd['filetype'] = () => PPx.GetFileInformation(PPx.EntryName).slice(1);
+cmd['filetype'] = (): string => PPx.GetFileInformation(PPx.EntryName).slice(1);
 
-cmd['LDC'] = () => actualPaths().join(' ');
+cmd['LDC'] = (): string => actualPaths().join(' ');
 
 type id = keyof typeof entry;
 

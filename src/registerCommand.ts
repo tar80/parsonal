@@ -10,7 +10,7 @@ const main = (): string => {
   const [name] = validArgs();
 
   if (!name) {
-    PPx.report('[WARN] shellcmdRegister.js: argument is not specified');
+    PPx.report('[shellcmdRegister] warn: argument is not specified');
     PPx.Quit(-1);
   }
 

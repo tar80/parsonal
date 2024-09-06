@@ -74,12 +74,17 @@ const getList = (reverce: boolean, ignoreppc: boolean, ignoreppv: boolean, ignor
 
 const tabExtract = (target: number): string[] => {
   const skipTabs: string[] = [];
-  const pane = (num: number) => PPx.Pane.Item(num).Tab;
-  const currentIdname = pane(-1).IDName;
+  const pane = (num: number) => {
+    // Tree-shaking causes an error, so I am taking measures to prevent it.
+    PPx.Sleep(0);
+
+    return PPx.Pane.Item(num)
+  };
+  const currentIdname = pane(-1).Tab.IDName;
   let idname: string;
 
-  for (let i = 0, k = pane(target).length; i < k; i++) {
-    idname = pane(i).IDName;
+  for (let i = 0, k = pane(target).Tab.length; i < k; i++) {
+    idname = pane(i).Tab.IDName;
     idname !== currentIdname && skipTabs.push(idname);
   }
 

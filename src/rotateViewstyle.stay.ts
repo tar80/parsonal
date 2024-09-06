@@ -6,10 +6,9 @@ import {circular} from '@ppmdev/modules/staymode.ts';
 
 const UNIQ_ID = 'rotateViewstyle';
 
-type Cache = {dirtype: number; cifcular: ReturnType<typeof circular>};
+type Cache = {dirtype: number; circular: ReturnType<typeof circular>};
 const cache = {} as Cache;
 
-type StyleName = keyof typeof STYLE;
 const STYLE = {
   general: ['サムネ小(&J)', 'サムネ中(&J)', 'サムネ欄(&J)', `format "${PPx.Extract('%*viewstyle')}"`],
   picture: ['画像中(&I)', '画像大(&I)', '画像特(&I)'],
@@ -36,22 +35,14 @@ const main = (): void => {
   PPx.StayMode = 2;
   const styles = getStyles(dirtype);
   cache.dirtype = dirtype;
-  cache.cifcular = circular<string>(styles);
-  cache.cifcular.discard('KC_main', UNIQ_ID, 'once');
+  cache.circular = circular(styles);
+  cache.circular.discard({table: 'KC_main', label: UNIQ_ID, cond: 'once'});
   ppx_resume();
 };
 
 const ppx_resume = (): void => {
-  PPx.Execute(`*viewstyle -temp ${cache.cifcular.get()}`);
+  PPx.Execute(`*viewstyle -temp ${cache.circular.get()}`);
 };
-
-// const styleSpec = (name: StyleName | number) => {
-//   if (typeof name === 'number') {
-//     name = (name >= 62 ? 'archive' : 'general') as StyleName;
-//   }
-
-//   return STYLE[name];
-// };
 
 const getStyles = (list: number): string[] => {
   switch (list) {
