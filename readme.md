@@ -25,7 +25,7 @@ switchmenuの`0:Create new menu`に`KeySetMode`というメニュー項目を作
  *setcust KC_main:9,%%j"[/trash]"
  *linemessage SetKey:9=[/trash]
  *string p,tempBg=%*getcust(C_back)
- *customize C_back=%so"cback"
+ *color back %so"cback"%:*zoom +1
  *mapkey use,K_ppmSwitchKey
  [/restart]
 ```

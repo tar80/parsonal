@@ -9,8 +9,8 @@
  */
 
 import '@ppmdev/polyfills/arrayIndexOf.ts';
-import {windowID} from '@ppmdev/modules/util.ts';
 import {safeArgs} from '@ppmdev/modules/argument.ts';
+import {windowID} from '@ppmdev/modules/util.ts';
 
 const main = (): void => {
   const [reverce, opwin, syncview, ignoretab, ignoreppc, ignoreppv, ignoreppb] = safeArgs(false, false, false, false, false, false, false);
@@ -74,17 +74,12 @@ const getList = (reverce: boolean, ignoreppc: boolean, ignoreppv: boolean, ignor
 
 const tabExtract = (target: number): string[] => {
   const skipTabs: string[] = [];
-  const pane = (num: number) => {
-    // Tree-shaking causes an error, so I am taking measures to prevent it.
-    PPx.Sleep(0);
-
-    return PPx.Pane.Item(num)
-  };
-  const currentIdname = pane(-1).Tab.IDName;
+  const pane = (num: number) => PPx.Pane.Item(num).Tab;
+  const currentIdname = pane(-1).IDName;
   let idname: string;
 
-  for (let i = 0, k = pane(target).Tab.length; i < k; i++) {
-    idname = pane(i).Tab.IDName;
+  for (let i = 0, k = pane(target).length; i < k; i++) {
+    idname = pane(i).IDName;
     idname !== currentIdname && skipTabs.push(idname);
   }
 
