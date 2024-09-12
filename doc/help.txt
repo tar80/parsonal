@@ -25,7 +25,6 @@ dist/
 	rotateViewstyle.stay.js	条件判別スタイル変更
 	selectPPx.js		*selectppxのラッパー
 	shellcmdRejister.js	PPcの環境変数にシェルコマンドのパスを登録
-	shiftPPx.js		条件判別PPxフォーカス
 
 switchmenu/
 	keyset.cfg		キー設定変更メニュー
