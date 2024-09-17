@@ -4,7 +4,7 @@
 
 import {circular} from '@ppmdev/modules/staymode.ts';
 
-const UNIQ_ID = 'rotateViewstyle';
+const EVENT_LABEL = 'cycleViewstyle';
 
 type Cache = {dirtype: number; circular: ReturnType<typeof circular>};
 const cache = {} as Cache;
@@ -36,7 +36,7 @@ const main = (): void => {
   const styles = getStyles(dirtype);
   cache.dirtype = dirtype;
   cache.circular = circular(styles);
-  cache.circular.discard({table: 'KC_main', label: UNIQ_ID, cond: 'once'});
+  cache.circular.discard({table: 'KC_main', label: EVENT_LABEL, cond: 'once'});
   ppx_resume();
 };
 

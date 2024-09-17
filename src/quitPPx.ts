@@ -14,6 +14,5 @@ const ppxID = (() => {
 
   return uid;
 })();
-const syncviewHwnd = PPx.Extract('%*extract(C,"%%*js(""PPx.result=PPx.SyncView;"")")');
 
-syncviewHwnd !== '0' ? PPx.Execute('*execute C,*ppvoption sync off') : PPx.Execute(`*closeppx ${ppxID}`);
+PPx.Execute(`*closeppx ${ppxID}`);
