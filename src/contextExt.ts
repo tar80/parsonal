@@ -4,6 +4,7 @@
  * "{dir:'D',arc:'A',img:'I',doc:'D',list:'L',arch:'A',aux:'A',none:'N'}"
  */
 
+import '@ppmdev/polyfills/arrayIndexOf.ts';
 import '@ppmdev/polyfills/json.ts';
 import '@ppmdev/polyfills/objectKeys.ts';
 import {isEmptyStr} from '@ppmdev/modules/guard.ts';
@@ -24,7 +25,6 @@ const main = (): void => {
   };
 
   switch (dirType()) {
- 
     case 'AUX':
       PPx.Execute(`%M_Caux,${hotKey.aux}`);
       break;
