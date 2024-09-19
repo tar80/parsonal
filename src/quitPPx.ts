@@ -1,5 +1,6 @@
 /* @file Closed considering ID */
 
+import '@ppmdev/polyfills/arrayIndexOf.ts';
 import {windowID} from '@ppmdev/modules/util.ts';
 
 const ppxID = (() => {
