@@ -420,6 +420,7 @@
 *syncprop  ;[on|off|focus] 連動プロパティ表示
 *terminate ;Windows を強制シャットダウン
 *togglewinsize  ;[window id]
+*topmostwindow  ;window id[,0|1]
 *tree  ;type ツリー窓の操作(PPc,一行編集)
 *trimmark  ;実行済みマークの調整
 *unmarkentry  ;[wildcards] エントリマーク解除

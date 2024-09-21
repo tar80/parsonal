@@ -7,7 +7,10 @@ import '@ppmdev/polyfills/arrayIndexOf.ts';
 import '@ppmdev/polyfills/objectKeys.ts';
 import {safeArgs} from '@ppmdev/modules/argument.ts';
 import {entryAttribute} from '@ppmdev/modules/meta.ts';
+import {expandSource} from '@ppmdev/modules/source.ts';
 import {ppvCmdline} from './mod/core.ts';
+
+const DEBUG_MODE = '';
 
 type ExtTypes = keyof typeof EXT;
 const EXT = {
@@ -15,9 +18,10 @@ const EXT = {
   image: ['.jpg', '.jpeg', '.bmp', '.png', '.gif', '.vch', '.edg', '.webp', '.tif', '.tiff'],
   movie: ['.3gp', '.avi', '.mp4', '.mpg', '.qt', '.ebml', '.webm']
 };
-const USER_ID = 'launchPPv';
+const USER_ID = 'launchViewer';
 const PPV_ID = 'Z';
 const PPV_POS = '3';
+const WORKER_PPV = 'workerPPv.stay.js';
 
 const main = (): void => {
   const fileext = PPx.Extract('.%t').toLowerCase();
@@ -46,11 +50,29 @@ const main = (): void => {
         ` --loop=no "${path}"`
     );
   } else {
-    setupPPv(onImgSpec, USER_ID);
-    PPx.Execute(`*setcust X_vpos=${PPV_POS}`);
-    PPx.Execute(`%Oi *ppv -bootid:${PPV_ID} ${ppvCmdline(path)}`);
+    const ppmviewDir = expandSource('ppm-view')?.path;
 
-    const mask = onImgSpec ? 'a:d-' : `path:,${EXT[reftype as ExtTypes]}`;
+    if (!ppmviewDir) {
+      PPx.linemessage('[ERROR] ppm-viewのパスを取得できませんでした');
+    }
+
+    let mask: string;
+
+    if (onImgSpec) {
+      mask = 'a:d-';
+      PPx.Execute(`*launch -max -nostartmsg -wait:idle %0ppvw.exe -bootid:${PPV_ID} ${ppvCmdline(path)}`);
+    } else {
+      mask = `path:,${EXT[reftype as ExtTypes]}`;
+      const winpos = PPx.Extract(`%*getcust(_WinPos:V${PPV_ID})`);
+      const savepos = PPx.Extract('%*getcust(X_vpos)');
+      const launchOpts = '-nostartmsg -noppb -hide -wait:idle';
+      const postCmdline = [`*script ${ppmviewDir}\\dist\\${WORKER_PPV},0,,,"${winpos}",${DEBUG_MODE}`, `*setcust X_vpos=${savepos}`];
+      PPx.Execute(`*setcust X_vpos=${PPV_POS}`);
+      PPx.Execute(`*launch ${launchOpts} %0ppvw.exe -bootid:${PPV_ID} -k %(${postCmdline.join('%:')}%)%%:%%v"${path}"`);
+    }
+
+    const linecust = `*linecust ${USER_ID},KV_main:CLOSEEVENT`;
+    PPx.Execute(`${linecust},${linecust},%%:%(*execute C,*maskentry%%:*jumppath -update -entry:%%R%)`);
     PPx.Execute(`*maskentry -temp ${mask}`);
     PPx.Execute(`*jumppath -update -entry:${filename}`);
   }
@@ -67,16 +89,5 @@ const getExtentions = (ext: string): string | undefined => {
 };
 
 const getParent = (): string => (entryAttribute.alias & PPx.Entry.Attributes ? '%*linkedpath(%FD)' : '%FD');
-const setupPPv = (onImgSpec: boolean, label: string): void => {
-  const xwin = onImgSpec ? 'B100000000' : 'B000000000';
-  const labelID = `${label},KV_main:CLOSEEVENT`;
-
-  PPx.Execute(`*setcust X_win:V=${xwin}`);
-  PPx.Execute(
-    `*linecust ${labelID},*linecust ${labelID},%%:` +
-      '*setcust X_vpos=%*getcust(X_vpos)%%:' +
-      '*execute C,%(*maskentry%%:*jumppath -update -entry:%%R%)'
-  );
-};
 
 main();

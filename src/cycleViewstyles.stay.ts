@@ -2,9 +2,10 @@
  * @arg 0 {string} - Specify the ID for thumbnail PPc
  */
 
-import {circular} from '@ppmdev/modules/staymode.ts';
+import {circular, getStaymodeId} from '@ppmdev/modules/staymode.ts';
 
-const EVENT_LABEL = 'cycleViewstyle';
+const EVENT_LABEL = 'cycleViewstyles';
+const STAYMODE_ID = getStaymodeId(EVENT_LABEL) || 2;
 
 type Cache = {dirtype: number; circular: ReturnType<typeof circular>};
 const cache = {} as Cache;
@@ -32,11 +33,12 @@ const main = (): void => {
     return;
   }
 
-  PPx.StayMode = 2;
+  PPx.StayMode = STAYMODE_ID;
+
   const styles = getStyles(dirtype);
   cache.dirtype = dirtype;
   cache.circular = circular(styles);
-  cache.circular.discard({table: 'KC_main', label: EVENT_LABEL, cond: 'once'});
+  cache.circular.discard({table: 'KC_main', label: EVENT_LABEL});
   ppx_resume();
 };
 
