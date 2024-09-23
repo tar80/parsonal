@@ -19,7 +19,7 @@ const STYLE = {
 };
 
 const main = (): void => {
-  const pictppc = PPx.Arguments.length > 0 ? `C_${PPx.Arguments.Item(0)}` : '';
+  const pictppc = PPx.Arguments.length > 0 ? `C${PPx.Arguments.Item(0)}` : '';
   const ppxid = PPx.WindowIDName;
   let dirtype = PPx.DirectoryType;
 
