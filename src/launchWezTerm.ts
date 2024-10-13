@@ -63,6 +63,8 @@ const main = (): void => {
       w = LOOP_MSEC - (e - s);
     } while (true);
   }
+
+  PPx.Execute('*focus #%*findwindowclass(org.wezfurlong.wezterm)')
 };
 
 const processRunning = (procName: string): boolean => {
