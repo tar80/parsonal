@@ -1,23 +1,26 @@
 /* @file Personal *selectppx
  * @arg 0 {string} - Specify option. Same as %*ppxlist option
+ * @arg 1 {string} - Specify the ID of PPb built into the terminal emulator
+ * @arg 2 {string} - Speify terminal emulator name. "wt" | "wezterm"
  */
 
 import '@ppmdev/polyfills/arrayIndexOf.ts';
 import '@ppmdev/polyfills/objectKeys.ts';
+import {validArgs} from '@ppmdev/modules/argument.ts';
 import {info} from '@ppmdev/modules/data.ts';
+import {tmp} from '@ppmdev/modules/data.ts';
 import {isEmptyStr} from '@ppmdev/modules/guard.ts';
 import {writeLines} from '@ppmdev/modules/io.ts';
 import {pathSelf} from '@ppmdev/modules/path.ts';
 import {windowID} from '@ppmdev/modules/util.ts';
-import {tmp} from '@ppmdev/modules/data.ts';
-import {safeArgs} from '@ppmdev/modules/argument.ts';
 
 const NAME = {MENU: 'M_temp', PPE: 'PPe', PPE_CLASS: 'PPeditW', SEP: '-- ='};
 const {uid} = windowID();
 
 const main = (): void => {
+  const [opt, ppbid, emulator] = validArgs();
   const hwndE = PPx.Extract(`%*findwindowclass(${NAME.PPE_CLASS})`);
-  const sortedID = sortPPxID(hwndE);
+  const sortedID = sortPPxID(hwndE, opt);
   const {scriptName} = pathSelf();
 
   if (!sortedID) {
@@ -29,12 +32,13 @@ const main = (): void => {
   const idCount = sortedID.length;
 
   if (idCount === 1) {
-    PPx.Execute(`*selectppx ${sortedID[0]}`);
+    const [_name, cmdline] = focusPPb(sortedID[0], ppbid, emulator);
+    PPx.Execute(cmdline);
   } else if (idCount > 1) {
     const path = tmp().file;
     const [error, errorMsg] = writeLines({
       path,
-      data: createMenu(idCount, sortedID, hwndE),
+      data: createMenu(idCount, sortedID, hwndE, ppbid, emulator),
       enc: 'utf16le',
       linefeed: info.nlcode,
       overwrite: true
@@ -46,14 +50,13 @@ const main = (): void => {
     }
 
     PPx.Execute(`*setcust @${path}`);
-    PPx.Execute(`%k"@down"%:*focus %${NAME.MENU}`);
+    PPx.Execute(`%k"@down"%:*execute ,%${NAME.MENU}`);
     PPx.Execute(`*deletecust "${NAME.MENU}"`);
     PPx.Execute('%K"@LOADCUST"');
   }
 };
 
-const sortPPxID = (hwndE: string): string[] | void => {
-  const [opt] = safeArgs('');
+const sortPPxID = (hwndE: string, opt = ''): string[] | void => {
   const rgx = /^[BCV#]#?$/;
 
   if (!isEmptyStr(opt) && !rgx.test(opt)) {
@@ -67,8 +70,7 @@ const sortPPxID = (hwndE: string): string[] | void => {
   return ids;
 };
 
-const buildFileName = (id: string, macro: string): string =>
-  PPx.Extract(`%*extract(${id},"${macro}")`).slice(-30);
+const buildFileName = (id: string, macro: string): string => PPx.Extract(`%*extract(${id},"${macro}")`).slice(-30);
 const addSeparator = (items: string[], need: boolean): boolean => {
   const len = items.length;
 
@@ -79,9 +81,24 @@ const addSeparator = (items: string[], need: boolean): boolean => {
   return need || len > 0;
 };
 
+const focusPPb = (sortID: string, ppbid: string, emulator: string): string[] => {
+  if (ppbid && emulator && sortID === `B_${ppbid}`) {
+    if (emulator === 'wt') {
+      return [emulator, '*focus #%*findwindowclass(cascadia_hosting_window_class)'];
+    } else if (emulator === 'wezterm') {
+      return [
+        emulator,
+        `*execute B${ppbid},printf "\\033]1337;SetUserVar=focus=UFBC\\007"`
+      ];
+    }
+  }
+
+  return ['console', `*focus ${sortID}`];
+};
+
 type Commands = 'ppc' | 'ppv' | 'ppb' | 'ppcust' | 'ppe';
 type Items = {[key in Commands]: string[]};
-const createMenu = (count: number, ids: string[], hwndE: string): string[] => {
+const createMenu = (count: number, ids: string[], hwndE: string, ppbid: string, emulator: string): string[] => {
   const items: Items = {ppc: [], ppv: [], ppb: [], ppcust: [], ppe: []};
   let [id, key, target]: string[] = [];
 
@@ -91,16 +108,17 @@ const createMenu = (count: number, ids: string[], hwndE: string): string[] => {
     key = id.slice(-1);
 
     if (target === 'C_') {
-      items.ppc.push(`PPc:&${key}\\t${buildFileName(id, '%%FD')} = ${id}`);
+      items.ppc.push(`PPc:&${key}\\t${buildFileName(id, '%%FD')} = *focus ${id}`);
     } else if (target === 'V_') {
-      items.ppv.push(`PPv:&${key}\\t${buildFileName(id, '%%FC')} = ${id}`);
+      items.ppv.push(`PPv:&${key}\\t${buildFileName(id, '%%FC')} = *focus ${id}`);
     } else if (target === 'B_') {
-      items.ppb.push(`PPb:&${key}\\t<console> = ${id}`);
+      const [name, cmdline] = focusPPb(id, ppbid, emulator);
+      items.ppb.push(`PPb:&${key}\\t<${name}> = ${cmdline}`);
     } else if (target === 'cs') {
       const hwndCS = PPx.Extract('%*findwindowtitle("PPx Customizer")');
-      items.ppcust.push(`PPcust:&${key}\\t<customizer> = #${hwndCS}`);
+      items.ppcust.push(`PPcust:&${key}\\t<customizer> = *focus #${hwndCS}`);
     } else if (target === 'PP') {
-      items.ppe.push(`PPe:&@\\t<editor>= #${hwndE}`);
+      items.ppe.push(`PPe:&@\\t<editor>= *focus #${hwndE}`);
     }
   }
 
