@@ -22,7 +22,7 @@ const main = (): '0' | '-1' => {
   const isExOrder = (v: string): v is ExOrder => /^(edit|args|diff|command)$/.test(v);
 
   if (!isExOrder(order)) {
-    PPx.Echo(`Invalid argument2:${order}`);
+    PPx.Echo(`Invalid argument[2]:${order}`);
 
     return '-1';
   }
@@ -110,7 +110,7 @@ const editCmd = {
 const exCmd = (hasProc: Bool, cmdline: string): string =>
   ({
     false: `--remote-send "<Cmd>${cmdline}<CR>"`,
-    true: `--remote-send "<Cmd>stopinsert|tabnew|${cmdline}<CR>"`
+    true: `--remote-send "<Cmd>stopinsert|${cmdline}<CR>"`
   })[hasProc];
 
 PPx.result = main();

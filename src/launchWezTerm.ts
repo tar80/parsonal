@@ -27,7 +27,7 @@ const main = (): void => {
 
   const weztermCmd = isEmptyStr(PPx.Extract(`%NB${ppbid}`))
     ? '*launch -noppb -hide -nostartmsg wezterm start'
-    : `*execute B${ppbid},wezterm cli spawn`;
+    : `*execute B${ppbid},wezterm cli spawn >nul`;
   const processName = /^.+\.exe$/i.test(proc) ? proc : PPx.Extract(proc);
 
   if (!~processName.indexOf(':')) {
