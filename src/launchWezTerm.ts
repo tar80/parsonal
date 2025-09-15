@@ -60,11 +60,11 @@ const main = (): void => {
         break;
       }
 
-      w = LOOP_MSEC - (e - s);
+      w = Math.max(0, LOOP_MSEC - (e - s));
     } while (true);
   }
 
-  PPx.Execute('*focus #%*findwindowclass(org.wezfurlong.wezterm)')
+  PPx.Execute('*focus #%*findwindowclass(org.wezfurlong.wezterm)');
 };
 
 const processRunning = (procName: string): boolean => {

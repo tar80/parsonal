@@ -7,12 +7,12 @@ VERSION=0.0.0
 PPM_VERSION=0.95
 
 #Requires PPx version
-PPX_VERSION=197
+PPX_VERSION=204
 
 #Requires PPx Script Module version
-SCRIPT_VERSION=21
-CV8_VERSION=3
-QJS_VERSION=0
+SCRIPT_VERSION=23
+CV8_VERSION=4
+QJS_VERSION=2
 
 #Requires external executables. Separated dy commas
 EXECUTABLES=

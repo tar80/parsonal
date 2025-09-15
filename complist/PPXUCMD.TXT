@@ -464,6 +464,8 @@
 ;<@pca@budle@pages>; *run -noppb -d:D:\Repos\tar80\pages-pca nyagos -k bundle exec jekyll s --future
 ;<@mpv@url>; *string o,url=%*input("%*clippedtext()" -title:"Specify url" -mode:e)%:%Obd mpv --ytdl-format="best[height<=360]" "%so'url'"
 ;<@mpv@youtube>; *string o,term=%*input("" -title:"Youtube search" -mode:s)%:%Obd mpv --ytdl-format="best[height<=360]" ytdl://ytsearch:"%so'term'"
+;<@uri>; obsidian://open?vault=vault
+;<@uri>; obsidian://open?vault=pages-pca
 ;<テキスト比較@cmd@diff>; fc %C "%2\%C"
 ;<バイナリ比較@cmd@diff>; fc /b %C "%2\%C"
 ;<クォータ違反の表示@cmd>; fsutil quota violations

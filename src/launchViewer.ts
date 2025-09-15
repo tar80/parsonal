@@ -28,7 +28,7 @@ const main = (): void => {
   const [reftype, imgspec] = safeArgs(getExtentions(fileext), '');
 
   if (PPx.DirectoryType >= 63) {
-    if (reftype === 'MOVIE' || !!PPx.Execute(`%"${USER_ID}"%Q"書庫内ファイルを開きます"`)) {
+    if (reftype === 'movie' || !!PPx.Execute(`%"${USER_ID}"%Q"書庫内ファイルを開きます"`)) {
       return;
     }
   }
@@ -42,7 +42,7 @@ const main = (): void => {
   const filename = PPx.Extract('%*name(CN,"%FCN")');
   const filepath = `${getParent()}\\${filename}`;
 
-  reftype === 'MOVIE' ? startMpv(filepath) : startPPv(reftype, imgspec, filepath, filename);
+  reftype === 'movie' ? startMpv(filepath) : startPPv(reftype, imgspec, filepath, filename);
 };
 
 const getExtentions = (ext: string): string | undefined => {

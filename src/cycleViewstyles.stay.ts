@@ -12,14 +12,14 @@ const cache = {} as Cache;
 
 const STYLE = {
   general: ['サムネ小(&J)', 'サムネ中(&J)', 'サムネ欄(&J)', `format "${PPx.Extract('%*viewstyle')}"`],
-  picture: ['画像中(&I)', '画像大(&I)', '画像特(&I)'],
+  picture: ['画像大(&I)',  '画像特(&I)', '画像小(&I)'],
   listfile: ['一覧(c&Omment)'],
   ftp: [],
   http: []
 };
 
 const main = (): void => {
-  const pictppc = PPx.Arguments.length > 0 ? `C${PPx.Arguments.Item(0)}` : '';
+  const pictppc = PPx.Arguments.length > 0 ? `C_${PPx.Arguments.Item(0)}` : '';
   const ppxid = PPx.WindowIDName;
   let dirtype = PPx.DirectoryType;
 

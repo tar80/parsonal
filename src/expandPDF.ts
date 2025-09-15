@@ -7,8 +7,8 @@ import {safeArgs} from '@ppmdev/modules/argument.ts';
 import fso from '@ppmdev/modules/filesystem.ts';
 import {read, writeLines} from '@ppmdev/modules/io.ts';
 
-const GS = `%'scoop'\\ghostscript\\current\\gswin64c.exe`;
-const CMD = '-dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r400 -dTextAlphaBits=4 -dDownScaleFactor=2';
+const GS = `%'scoop'\\apps\\ghostscript\\current\\bin\\gswin64c.exe`;
+const GS_OPTIONS = '-dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r400 -dTextAlphaBits=4 -dDownScaleFactor=2';
 const PAGE_LIMIT = 99;
 
 const main = (): void => {
@@ -47,7 +47,7 @@ const main = (): void => {
       return;
     }
 
-    PPx.Execute(`%On *cd ${tempDir}%:*ppb -c %(${GS} ${CMD} -dFirstPage=1 -dLastPage=${pages} -sOutputFile="%%03d" "${path}"%)`);
+    PPx.Execute(`%On *cd ${tempDir}%:*ppb -c %(${GS} ${GS_OPTIONS} -dFirstPage=1 -dLastPage=${pages} -sOutputFile="%%03d" "${path}"%)`);
   }
 
   PPx.Execute(`*jumppath ${lfPath}`);
