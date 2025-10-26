@@ -10,16 +10,8 @@ const STAYMODE_ID = getStaymodeId(EVENT_LABEL) || 2;
 type Cache = {dirtype: number; circular: ReturnType<typeof circular>};
 const cache = {} as Cache;
 
-const STYLE = {
-  general: ['サムネ小(&J)', 'サムネ中(&J)', 'サムネ欄(&J)', `format "${PPx.Extract('%*viewstyle')}"`],
-  picture: ['画像大(&I)',  '画像特(&I)', '画像小(&I)'],
-  listfile: ['一覧(c&Omment)'],
-  ftp: [],
-  http: []
-};
-
 const main = (): void => {
-  const pictppc = PPx.Arguments.length > 0 ? `C_${PPx.Arguments.Item(0)}` : '';
+  const pictppc = PPx.Arguments.length > 0 ? `C${PPx.Arguments.Item(0)}` : '';
   const ppxid = PPx.WindowIDName;
   let dirtype = PPx.DirectoryType;
 
@@ -49,15 +41,15 @@ const ppx_resume = (): void => {
 const getStyles = (list: number): string[] => {
   switch (list) {
     case -1:
-      return STYLE['picture'];
+      return ['画像大(&I)', '画像特(&I)', '画像小(&I)'];
     case 4:
-      return STYLE['listfile'];
+      return ['一覧(c&Omment)'];
     case 21:
-      return STYLE['ftp'];
+      return [];
     case 80:
-      return STYLE['http'];
+      return [];
     default:
-      return STYLE['general'];
+      return ['サムネ小(&J)', 'サムネ中(&J)', 'サムネ欄(&J)', `format "${PPx.Extract('%*viewstyle')}"`];
     // return styleSpec(list);
   }
 };
