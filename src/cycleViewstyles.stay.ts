@@ -11,6 +11,7 @@ type Cache = {dirtype: number; circular: ReturnType<typeof circular>};
 const cache = {} as Cache;
 
 const main = (): void => {
+  PPx.WindowIDName = '1';
   const pictppc = PPx.Arguments.length > 0 ? `C${PPx.Arguments.Item(0)}` : '';
   const ppxid = PPx.WindowIDName;
   let dirtype = PPx.DirectoryType;
