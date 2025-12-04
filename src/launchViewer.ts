@@ -55,7 +55,7 @@ const getExtentions = (ext: string): string | undefined => {
   return;
 };
 
-const getParent = (): string => (entryAttribute.alias & PPx.Entry.Attributes ? '%*name(D,"%*linkedpath(%FDC)")' : '%FD');
+const getParent = (): string => (entryAttribute.alias & PPx.Entry.Attributes ? '%*name(D,"%*linkedpath(%FNDC)")' : '%FND');
 
 const startMpv = (filepath: string): void => {
   PPx.Execute(
